@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -15,19 +16,19 @@ Route::get('/cashier', function () {
         return view('cashier.index');
 });
 
-Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-});
+Route::get('/admin/dashboard', [CategoryController::class, 'index'])->name('admin.dashboard');
+Route::post('/admin/category/store', [CategoryController::class, 'store'])->name('admin.category.store');
+
 
 Route::middleware(['auth', 'check.admin'])->group(function () {
     
-
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 

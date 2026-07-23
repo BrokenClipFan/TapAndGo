@@ -308,59 +308,44 @@
                             <!-- Scrollable Categories Container -->
                             <div class="card-body p-3 overflow-auto custom-scroll" style="max-height: 250px;" id="categoriesContainer">
                                 <ul class="list-group list-group-flush" id="categoryList">
-                                    
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="bi bi-basket-fill fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-brand-navy category-title">Gourmet Burgers</div>
+                                    @foreach($categories as $category)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0 category-item" data-id="{{ $category->id }}">
+                                        <div class="d-flex align-items-center gap-2 overflow-hidden me-2">
+                                            
+                                            {{-- Category Image --}}
+                                            @if($category->image_path)
+                                                <img src="{{ Storage::url($category->image_path) }}" 
+                                                    alt="{{ $category->name }}" 
+                                                    class="rounded-2 flex-shrink-0 category-img-preview" 
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
+                                            @else
+                                                <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-2 d-flex align-items-center justify-content-center flex-shrink-0 category-img-placeholder" style="width: 40px; height: 40px;">
+                                                    <i class="bi bi-tags-fill fs-5"></i>
+                                                </div>
+                                            @endif
+
+                                            <div class="text-truncate">
+                                                <div class="fw-bold text-brand-navy category-title text-truncate">{{ $category->name }}</div>
                                                 <small class="text-muted">62 items sold</small>
                                             </div>
                                         </div>
-                                        <span class="fw-bold text-brand-navy">$775.00</span>
-                                    </li>
 
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="bi bi-fire fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-brand-navy category-title">Crispy Sides & Fries</div>
-                                                <small class="text-muted">45 items sold</small>
-                                            </div>
+                                        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                            <span class="fw-bold text-brand-navy me-1">$775.00</span>
+                                            
+                                            <!-- Action Buttons -->
+                                            <button class="btn btn-sm btn-outline-primary py-0 px-2 btn-edit-category" 
+                                                    data-id="{{ $category->id }}" 
+                                                    data-name="{{ $category->name }}"
+                                                    data-img="{{ $category->image_path ? Storage::url($category->image_path) : '' }}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger py-0 px-2 btn-delete-category" data-id="{{ $category->id }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
-                                        <span class="fw-bold text-brand-navy">$360.00</span>
                                     </li>
-
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-info bg-opacity-10 text-info p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="bi bi-cup-straw fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-brand-navy category-title">Cold Beverages</div>
-                                                <small class="text-muted">54 items sold</small>
-                                            </div>
-                                        </div>
-                                        <span class="fw-bold text-brand-navy">$216.00</span>
-                                    </li>
-
-                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-success bg-opacity-10 text-success p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="bi bi-egg-fried fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-brand-navy category-title">Desserts & Shakes</div>
-                                                <small class="text-muted">30 items sold</small>
-                                            </div>
-                                        </div>
-                                        <span class="fw-bold text-brand-navy">$131.50</span>
-                                    </li>
-
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -574,15 +559,16 @@
                     <h5 class="modal-title fw-bold"><i class="bi bi-tag-fill me-2 text-brand-orange"></i>Add Food Category</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="addCategoryForm">
+                <form id="addCategoryForm" action="{{ route('admin.category.store') }}" enctype="multipart/form-data" method="POST">
+                    @csrf
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Category Name</label>
-                            <input type="text" class="form-control" id="inputCatName" required placeholder="e.g. Pasta & Noodles">
+                            <input type="text" name="name" class="form-control" id="inputCatName" required placeholder="e.g. Pasta & Noodles">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Category Image</label>
-                            <input type="file" class="form-control" id="inputCatImage" accept="image/*">
+                            <input type="file" name="image" class="form-control" id="inputCatImage" accept="image/*">
                             <small class="text-muted fs-8">PNG or JPG recommended for best UI fit.</small>
                         </div>
                     </div>
@@ -631,6 +617,34 @@
                     <div class="modal-footer bg-light border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Add to Inventory</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-brand-navy text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2 text-brand-orange"></i>Edit Category</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editCategoryForm">
+                    <input type="hidden" id="editCategoryId">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Category Name</label>
+                            <input type="text" class="form-control" id="editCatName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Change Image (Optional)</label>
+                            <input type="file" class="form-control" id="editCatImage" accept="image/*">
+                            <small class="text-muted fs-8">Leave empty to keep current image.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -705,57 +719,57 @@
             });
 
             // 3. ADD CATEGORY FORM LOGIC (WITH PREVIEW/IMAGE SUPPORT)
-            const addCategoryForm = document.getElementById('addCategoryForm');
-            addCategoryForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // const addCategoryForm = document.getElementById('addCategoryForm');
+            // addCategoryForm.addEventListener('submit', function(e) {
+            //     e.preventDefault();
 
-                const catName = document.getElementById('inputCatName').value.trim();
-                const imageInput = document.getElementById('inputCatImage');
-                const categoryList = document.getElementById('categoryList');
+            //     const catName = document.getElementById('inputCatName').value.trim();
+            //     const imageInput = document.getElementById('inputCatImage');
+            //     const categoryList = document.getElementById('categoryList');
 
-                let imageHtml = `
-                    <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="bi bi-tags-fill fs-5"></i>
-                    </div>`;
+            //     let imageHtml = `
+            //         <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            //             <i class="bi bi-tags-fill fs-5"></i>
+            //         </div>`;
 
-                // If user uploaded an image, read it locally for instant preview
-                if (imageInput.files && imageInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        renderCategoryItem(evt.target.result);
-                    };
-                    reader.readAsDataURL(imageInput.files[0]);
-                } else {
-                    renderCategoryItem(null);
-                }
+            //     // If user uploaded an image, read it locally for instant preview
+            //     if (imageInput.files && imageInput.files[0]) {
+            //         const reader = new FileReader();
+            //         reader.onload = function(evt) {
+            //             renderCategoryItem(evt.target.result);
+            //         };
+            //         reader.readAsDataURL(imageInput.files[0]);
+            //     } else {
+            //         renderCategoryItem(null);
+            //     }
 
-                function renderCategoryItem(imgSrc) {
-                    if (imgSrc) {
-                        imageHtml = `<img src="${imgSrc}" class="category-icon-img" alt="${catName}">`;
-                    }
+            //     function renderCategoryItem(imgSrc) {
+            //         if (imgSrc) {
+            //             imageHtml = `<img src="${imgSrc}" class="category-icon-img" alt="${catName}">`;
+            //         }
 
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0';
-                    li.innerHTML = `
-                        <div class="d-flex align-items-center gap-2">
-                            ${imageHtml}
-                            <div>
-                                <div class="fw-bold text-brand-navy category-title">${catName}</div>
-                                <small class="text-muted">0 items sold</small>
-                            </div>
-                        </div>
-                        <span class="fw-bold text-brand-navy">$0.00</span>
-                    `;
+            //         const li = document.createElement('li');
+            //         li.className = 'list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0';
+            //         li.innerHTML = `
+            //             <div class="d-flex align-items-center gap-2">
+            //                 ${imageHtml}
+            //                 <div>
+            //                     <div class="fw-bold text-brand-navy category-title">${catName}</div>
+            //                     <small class="text-muted">0 items sold</small>
+            //                 </div>
+            //             </div>
+            //             <span class="fw-bold text-brand-navy">$0.00</span>
+            //         `;
 
-                    categoryList.prepend(li);
+            //         categoryList.prepend(li);
 
-                    // Close Modal & Reset
-                    const modalEl = document.getElementById('addCategoryModal');
-                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                    if (modalInstance) modalInstance.hide();
-                    addCategoryForm.reset();
-                }
-            });
+            //         // Close Modal & Reset
+            //         const modalEl = document.getElementById('addCategoryModal');
+            //         const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            //         if (modalInstance) modalInstance.hide();
+            //         addCategoryForm.reset();
+            //     }
+            // });
 
             // 4. STOCK LEVEL & BADGE REFRESH HELPER
             function updateRowStockState(row, newQty) {
