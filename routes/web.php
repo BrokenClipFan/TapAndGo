@@ -9,7 +9,15 @@ Route::get('/dashboard', function () {
 
 Route::get('/', function () {
         return view('costumers');
-    });
+});
+
+Route::get('/cashier', function () {
+        return view('cashier.index');
+});
+
+Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+});
 
 Route::middleware(['auth', 'check.admin'])->group(function () {
     
