@@ -18,6 +18,8 @@ Route::get('/cashier', function () {
 
 Route::get('/admin/dashboard', [CategoryController::class, 'index'])->name('admin.dashboard');
 Route::post('/admin/category/store', [CategoryController::class, 'store'])->name('admin.category.store');
+Route::put('/admin/category/update/{category}', [CategoryController::class, 'update'])->name('admin.category.update');
+Route::delete('/admin/category/delete/{category}', [CategoryController::class, 'destroy'])->name('admin.category.delete');
 
 
 Route::middleware(['auth', 'check.admin'])->group(function () {

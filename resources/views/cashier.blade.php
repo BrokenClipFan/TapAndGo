@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,12 +14,18 @@
     <style>
         /* Modern Reset & Dynamic Brand Theme Engine */
         :root {
-            --theme-primary: #1a4373;        /* TapAndGo Core Deep Blue */
-            --theme-primary-hover: #113259;  /* Darker Blue */
-            --theme-accent: #f97316;         /* TapAndGo Vibrant Orange */
-            --theme-accent-hover: #ea580c;   /* Darker Orange */
-            --theme-dark: #0f172a;           /* Clean Off-Black */
-            --theme-success: #10b981;        /* Clean Green */
+            --theme-primary: #1a4373;
+            /* TapAndGo Core Deep Blue */
+            --theme-primary-hover: #113259;
+            /* Darker Blue */
+            --theme-accent: #f97316;
+            /* TapAndGo Vibrant Orange */
+            --theme-accent-hover: #ea580c;
+            /* Darker Orange */
+            --theme-dark: #0f172a;
+            /* Clean Off-Black */
+            --theme-success: #10b981;
+            /* Clean Green */
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
@@ -33,10 +40,11 @@
         }
 
         /* Strict Fit Screen Constraints */
-        html, body {
+        html,
+        body {
             height: 100vh;
             width: 100vw;
-            overflow: hidden; 
+            overflow: hidden;
             background-color: var(--pos-bg);
             display: flex;
             flex-direction: column;
@@ -73,7 +81,8 @@
         .pos-workspace {
             flex-grow: 1;
             display: flex;
-            min-height: 0; /* Critical for inner scrolling columns */
+            min-height: 0;
+            /* Critical for inner scrolling columns */
             width: 100vw;
         }
 
@@ -96,7 +105,7 @@
             border-radius: 0.75rem;
             border: none;
             background: transparent;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,7 +116,8 @@
             position: relative;
         }
 
-        .sidebar-btn:hover, .sidebar-btn.active {
+        .sidebar-btn:hover,
+        .sidebar-btn.active {
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--theme-accent);
         }
@@ -169,13 +179,18 @@
         }
 
         /* Beautiful Scrollbar design for cashiers fast flow */
-        .pane-body::-webkit-scrollbar, .product-grid::-webkit-scrollbar {
+        .pane-body::-webkit-scrollbar,
+        .product-grid::-webkit-scrollbar {
             width: 6px;
         }
-        .pane-body::-webkit-scrollbar-track, .product-grid::-webkit-scrollbar-track {
+
+        .pane-body::-webkit-scrollbar-track,
+        .product-grid::-webkit-scrollbar-track {
             background: transparent;
         }
-        .pane-body::-webkit-scrollbar-thumb, .product-grid::-webkit-scrollbar-thumb {
+
+        .pane-body::-webkit-scrollbar-thumb,
+        .product-grid::-webkit-scrollbar-thumb {
             background: var(--border-color);
             border-radius: 10px;
         }
@@ -224,7 +239,7 @@
             background: white;
             border-radius: 1rem;
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             padding: 1.5rem;
             margin-bottom: 1.25rem;
         }
@@ -393,25 +408,33 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
+
 <body class="bg-light">
 
     <!-- Brand POS Header -->
     <header class="pos-header">
         <a class="pos-brand" href="#">
-            <i class="bi bi-lightning-fill"></i> 
+            <i class="bi bi-lightning-fill"></i>
             <span>TapAndGo POS Terminal</span>
         </a>
         <div class="d-flex align-items-center gap-3" style="display: flex; align-items: center; gap: 1rem;">
-            <span class="badge bg-light text-dark fw-bold px-3 py-2 d-none d-md-block" style="background: white; color: var(--text-dark); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 700;">
+            <span class="badge bg-light text-dark fw-bold px-3 py-2 d-none d-md-block"
+                style="background: white; color: var(--text-dark); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 700;">
                 <i class="bi bi-shop me-1 text-primary"></i> Station #03
             </span>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--theme-primary); font-weight: 700;">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold"
+                    style="width: 38px; height: 38px; font-size: 0.9rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--theme-primary); font-weight: 700;">
                     JD
                 </div>
                 <div class="d-none d-sm-block text-start" style="line-height: 1.1; color: white;">
@@ -424,7 +447,7 @@
 
     <!-- App Wrapper Container -->
     <main class="pos-workspace">
-        
+
         <!-- Left Side: POS Sidebar Nav controllers -->
         <nav class="pos-sidebar">
             <button class="sidebar-btn active" title="Active Orders Queue">
@@ -449,39 +472,45 @@
             <div class="pane-header">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h6 style="font-weight: 700; color: var(--text-dark);">Active Pickups</h6>
-                    <span style="background-color: var(--theme-primary); color: white; padding: 0.2rem 0.6rem; border-radius: 50rem; font-size: 0.75rem;" id="live-active-tag">1 Active</span>
+                    <span
+                        style="background-color: var(--theme-primary); color: white; padding: 0.2rem 0.6rem; border-radius: 50rem; font-size: 0.75rem;"
+                        id="live-active-tag">1 Active</span>
                 </div>
                 <div style="margin-top: 0.5rem;">
-                    <input type="text" class="form-control form-control-sm" style="width: 100%; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 0.35rem;" placeholder="Search Order ID..." id="queue-search">
+                    <input type="text" class="form-control form-control-sm"
+                        style="width: 100%; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 0.35rem;"
+                        placeholder="Search Order ID..." id="queue-search">
                 </div>
             </div>
-            
+
             <div class="pane-body" id="order-queue-list">
                 <!-- Preset Simulated Order Card #1 (Tied to the user's Order Pass page) -->
                 <div class="order-ticket-card active" onclick="selectOrder('TG-94820')" id="card-TG-94820">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                         <span style="font-weight: 700; color: var(--theme-primary);">#TG-94820</span>
                         <span class="status-badge status-ready" id="status-tag-TG-94820">Ready to Scan</span>
                     </div>
                     <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
                         <i class="bi bi-clock"></i> Placed 12 mins ago
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
                         <span style="color: var(--text-dark);">Classic Cheeseburger Deluxe...</span>
                         <strong style="color: var(--text-dark);">$20.00</strong>
                     </div>
                     <!-- Hidden elements holding detailed order objects (Uses robust direct style hiding rule to prevent leakage) -->
                     <div class="hidden-metadata" style="display: none !important;">
                         {
-                            "id": "TG-94820",
-                            "code": "837-D0C",
-                            "items": [
-                                {"name": "Classic Cheeseburger Deluxe", "qty": 1, "price": 12.50},
-                                {"name": "Crispy Cajun Fries (Large)", "qty": 1, "price": 4.50},
-                                {"name": "House Brewed Iced Tea", "qty": 1, "price": 3.00}
-                            ],
-                            "total": 20.00,
-                            "timestamp": "12 mins ago"
+                        "id": "TG-94820",
+                        "code": "837-D0C",
+                        "items": [
+                        {"name": "Classic Cheeseburger Deluxe", "qty": 1, "price": 12.50},
+                        {"name": "Crispy Cajun Fries (Large)", "qty": 1, "price": 4.50},
+                        {"name": "House Brewed Iced Tea", "qty": 1, "price": 3.00}
+                        ],
+                        "total": 20.00,
+                        "timestamp": "12 mins ago"
                         }
                     </div>
                 </div>
@@ -494,7 +523,8 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h5 style="font-weight: 700; color: var(--text-dark); font-size: 1.1rem;">Validation Terminal</h5>
                     <div>
-                        <span style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                        <span
+                            style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
                             <i class="bi bi-wifi"></i> Scanner Online
                         </span>
                     </div>
@@ -503,59 +533,78 @@
 
             <!-- Scrollable validation frame -->
             <div class="pane-body">
-                
+
                 <!-- Verification Scanner Input box -->
                 <div class="processing-box">
-                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem;">Scan or Input Verification Pass Code</h6>
+                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem;">Scan or Input
+                        Verification Pass Code</h6>
                     <div class="scanner-input-group">
                         <span style="display: flex; align-items: center; padding-left: 1rem; color: var(--text-muted);">
                             <i class="bi bi-qr-code-scan" style="color: var(--theme-primary); font-size: 1.25rem;"></i>
                         </span>
-                        <input type="text" class="scanner-input" placeholder="E.g. 837-D0C" id="manual-code-input" autofocus>
+                        <input type="text" class="scanner-input" placeholder="E.g. 837-D0C" id="manual-code-input"
+                            autofocus>
                         <button class="scanner-btn" type="button" onclick="validateManualCode()" title="Process Scan">
                             <i class="bi bi-arrow-right-circle" style="font-size: 1.25rem;"></i>
                         </button>
                     </div>
                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
-                        <i class="bi bi-info-circle"></i> Enter the alphanumeric pass code displayed on customer's active screen.
+                        <i class="bi bi-info-circle"></i> Enter the alphanumeric pass code displayed on customer's
+                        active screen.
                     </div>
                 </div>
 
                 <!-- Verification Panel details (Toggles dynamic classes) -->
                 <div class="processing-box" id="verification-display-pane" style="position: relative;">
-                    
+
                     <!-- Empty State (Hidden when active order loaded) -->
-                    <div class="text-center py-5 text-muted d-none" id="empty-state-loader" style="text-align: center; padding: 3rem 0;">
-                        <i class="bi bi-qr-code" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block;"></i>
-                        <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Waiting for Scanner Event</h6>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Use scanner gun or type the active customer code above.</p>
+                    <div class="text-center py-5 text-muted d-none" id="empty-state-loader"
+                        style="text-align: center; padding: 3rem 0;">
+                        <i class="bi bi-qr-code"
+                            style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block;"></i>
+                        <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Waiting for
+                            Scanner Event</h6>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Use scanner gun or type the active
+                            customer code above.</p>
                     </div>
 
                     <!-- Populated State details (Now defaults to displayed using our corrected state engine) -->
                     <div id="loaded-state-details">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
                             <div>
-                                <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Verified Live Order: <span id="v-order-id" style="color: var(--theme-primary);">#TG-94820</span></h6>
-                                <p style="color: var(--text-muted); font-size: 0.85rem;">Pass Code: <strong id="v-pass-code" style="color: var(--theme-accent); text-transform: uppercase;">837-D0C</strong></p>
+                                <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Verified
+                                    Live Order: <span id="v-order-id"
+                                        style="color: var(--theme-primary);">#TG-94820</span></h6>
+                                <p style="color: var(--text-muted); font-size: 0.85rem;">Pass Code: <strong
+                                        id="v-pass-code"
+                                        style="color: var(--theme-accent); text-transform: uppercase;">837-D0C</strong>
+                                </p>
                             </div>
-                            <span style="background-color: var(--theme-accent); color: white; padding: 0.35rem 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700;" id="v-status-badge">ACTIVE</span>
+                            <span
+                                style="background-color: var(--theme-accent); color: white; padding: 0.35rem 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700;"
+                                id="v-status-badge">ACTIVE</span>
                         </div>
 
                         <!-- Scanned Items Review List -->
-                        <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem;">Release Checklist</h5>
-                        <div id="v-items-checklist" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
-                            <!-- Populated on load or select click via js -->
-                        </div>
+                        <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem;">Release
+                            Checklist</h5>
+                            <div id="v-items-checklist"
+                                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                <!-- Populated on load or select click via js -->
+                            </div>
 
-                        <!-- Release Orders actions wrapper -->
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn-custom btn-custom-primary" style="width: auto; padding: 0.75rem 1.5rem;" onclick="resetActiveVerification()">
-                                <i class="bi bi-x-circle"></i> Reset
-                            </button>
-                            <button class="btn-custom btn-custom-success" style="flex-grow: 1;" onclick="completeOrderHandover()">
-                                <i class="bi bi-check-all"></i> Confirm Meal Handover & Release Order
-                            </button>
-                        </div>
+                            <!-- Release Orders actions wrapper -->
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn-custom btn-custom-primary"
+                                    style="width: auto; padding: 0.75rem 1.5rem;" onclick="resetActiveVerification()">
+                                    <i class="bi bi-x-circle"></i> Reset
+                                </button>
+                                <button class="btn-custom btn-custom-success" style="flex-grow: 1;"
+                                    onclick="completeOrderHandover()">
+                                    <i class="bi bi-check-all"></i> Confirm Meal Handover & Release Order
+                                </button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -569,43 +618,58 @@
 
             <!-- Scrollable pane containing quick catalog items -->
             <div class="pane-body">
-                <h6 style="font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.75rem;">Quick Catalog Tap</h6>
+                <h6
+                    style="font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.75rem;">
+                    Quick Catalog Tap</h6>
                 <div class="product-grid mb-4" style="margin-bottom: 1.5rem;">
                     <div class="product-card" onclick="addLocalCartItem('Classic Cheeseburger Deluxe', 12.50)">
                         <div class="product-icon"><i class="bi bi-basket3"></i></div>
-                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Cheeseburger</p>
+                        <p
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                            Cheeseburger</p>
                         <span style="color: var(--theme-primary); font-size: 0.85rem; font-weight: 600;">$12.50</span>
                     </div>
                     <div class="product-card" onclick="addLocalCartItem('Crispy Cajun Fries (Large)', 4.50)">
                         <div class="product-icon"><i class="bi bi-fire"></i></div>
-                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Cajun Fries</p>
+                        <p
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                            Cajun Fries</p>
                         <span style="color: var(--theme-primary); font-size: 0.85rem; font-weight: 600;">$4.50</span>
                     </div>
                     <div class="product-card" onclick="addLocalCartItem('House Brewed Iced Tea', 3.00)">
                         <div class="product-icon"><i class="bi bi-cup-straw"></i></div>
-                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Brewed Iced Tea</p>
+                        <p
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                            Brewed Iced Tea</p>
                         <span style="color: var(--theme-primary); font-size: 0.85rem; font-weight: 600;">$3.00</span>
                     </div>
                     <div class="product-card" onclick="addLocalCartItem('Premium Vanilla Shake', 5.00)">
                         <div class="product-icon"><i class="bi bi-droplet"></i></div>
-                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Vanilla Shake</p>
+                        <p
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                            Vanilla Shake</p>
                         <span style="color: var(--theme-primary); font-size: 0.85rem; font-weight: 600;">$5.00</span>
                     </div>
                 </div>
 
                 <!-- Live Walk-In Cart Container Panel -->
-                <div style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; background-color: #f8fafc;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
-                        <h6 style="font-weight: 700; color: var(--text-dark); font-size: 0.85rem;">Direct Register Cart</h6>
+                <div
+                    style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; background-color: #f8fafc;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                        <h6 style="font-weight: 700; color: var(--text-dark); font-size: 0.85rem;">Direct Register Cart
+                        </h6>
                         <button class="btn-custom-link-danger" onclick="clearLocalCart()">Clear</button>
                     </div>
 
                     <!-- Cart Item container -->
                     <div id="local-cart-items" style="max-height: 120px; overflow-y: auto; margin-bottom: 1rem;">
-                        <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 0.5rem 0;" id="empty-cart-msg">No items tapped yet.</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 0.5rem 0;"
+                            id="empty-cart-msg">No items tapped yet.</p>
                     </div>
 
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
                         <span>Grand Total</span>
                         <span style="color: var(--theme-primary);" id="local-cart-total">$0.00</span>
                     </div>
@@ -623,8 +687,10 @@
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <i class="bi bi-check-circle-fill" style="color: var(--theme-success); font-size: 1.25rem;"></i>
             <div>
-                <strong style="display: block; font-weight: 700; color: var(--text-dark); font-size: 0.9rem;">Notification</strong>
-                <span style="font-size: 0.8rem; color: var(--text-muted);" id="success-banner-msg">Action processed.</span>
+                <strong
+                    style="display: block; font-weight: 700; color: var(--text-dark); font-size: 0.9rem;">Notification</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);" id="success-banner-msg">Action
+                    processed.</span>
             </div>
         </div>
     </div>
@@ -636,10 +702,21 @@
             "TG-94820": {
                 id: "TG-94820",
                 code: "837-D0C",
-                items: [
-                    {name: "Classic Cheeseburger Deluxe", qty: 1, price: 12.50},
-                    {name: "Crispy Cajun Fries (Large)", qty: 1, price: 4.50},
-                    {name: "House Brewed Iced Tea", qty: 1, price: 3.00}
+                items: [{
+                        name: "Classic Cheeseburger Deluxe",
+                        qty: 1,
+                        price: 12.50
+                    },
+                    {
+                        name: "Crispy Cajun Fries (Large)",
+                        qty: 1,
+                        price: 4.50
+                    },
+                    {
+                        name: "House Brewed Iced Tea",
+                        qty: 1,
+                        price: 3.00
+                    }
                 ],
                 total: 20.00,
                 status: "Ready to Scan"
@@ -686,10 +763,10 @@
 
             document.getElementById('v-order-id').innerText = `#${data.id}`;
             document.getElementById('v-pass-code').innerText = data.code;
-            
+
             const badge = document.getElementById('v-status-badge');
             badge.innerText = data.status.toUpperCase();
-            
+
             if (data.status === "Delivered") {
                 badge.style.backgroundColor = "#64748b";
                 badge.style.color = "white";
@@ -701,7 +778,7 @@
             // Build item verification check rows with explicit styling fallback
             const checkList = document.getElementById('v-items-checklist');
             checkList.innerHTML = '';
-            
+
             data.items.forEach((item, index) => {
                 const itemRow = document.createElement('div');
                 itemRow.style.display = 'flex';
@@ -712,14 +789,14 @@
                 itemRow.style.border = '1px solid var(--border-color)';
                 itemRow.style.borderRadius = '0.5rem';
                 itemRow.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <input class="form-check-input" type="checkbox" id="itemCheck-${index}" ${data.status === "Delivered" ? 'checked disabled' : ''} style="width: 18px; height: 18px; cursor: pointer;">
-                        <label class="form-check-label" style="font-weight: 600; color: var(--text-dark); cursor: pointer;" for="itemCheck-${index}">
-                            ${item.qty}x ${item.name}
-                        </label>
-                    </div>
-                    <span style="color: var(--text-muted); font-weight: 700;">$${(item.price * item.qty).toFixed(2)}</span>
-                `;
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <input class="form-check-input" type="checkbox" id="itemCheck-${index}" ${data.status === "Delivered" ? 'checked disabled' : ''} style="width: 18px; height: 18px; cursor: pointer;">
+        <label class="form-check-label" style="font-weight: 600; color: var(--text-dark); cursor: pointer;" for="itemCheck-${index}">
+            ${item.qty}x ${item.name}
+        </label>
+    </div>
+    <span style="color: var(--text-muted); font-weight: 700;">$${(item.price * item.qty).toFixed(2)}</span>
+`;
                 checkList.appendChild(itemRow);
             });
         }
@@ -775,12 +852,13 @@
             const checkedCount = document.querySelectorAll('#v-items-checklist input[type="checkbox"]:checked').length;
 
             if (checkedCount < totalChecks) {
-                showToastNotification("Ensure all kitchen items are double checked on the checklist prior to releasing.", "warning");
+                showToastNotification("Ensure all kitchen items are double checked on the checklist prior to releasing.",
+                    "warning");
                 return;
             }
 
             const currentId = activeVerificationOrder.id;
-            
+
             // Mark as delivered in local dataset
             loadedOrders[currentId].status = "Delivered";
 
@@ -794,7 +872,7 @@
             // Refresh view
             selectOrder(currentId);
             showToastNotification(`Order #${currentId} has been successfully completed and released.`, "success");
-            
+
             // Decrease Queue active counters
             document.getElementById('live-active-tag').innerText = "0 Active";
             document.getElementById('live-queue-counter').innerText = "0";
@@ -806,7 +884,11 @@
             if (existing) {
                 existing.qty++;
             } else {
-                localCart.push({ name, price, qty: 1 });
+                localCart.push({
+                    name,
+                    price,
+                    qty: 1
+                });
             }
             renderLocalCart();
         }
@@ -835,7 +917,8 @@
             const totalDisplay = document.getElementById('local-cart-total');
 
             if (localCart.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 0.5rem 0;" id="empty-cart-msg">No items tapped yet.</p>`;
+                container.innerHTML =
+                    `<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 0.5rem 0;" id="empty-cart-msg">No items tapped yet.</p>`;
                 totalDisplay.innerText = "$0.00";
                 return;
             }
@@ -850,17 +933,17 @@
                 const row = document.createElement('div');
                 row.className = "cart-item-row";
                 row.innerHTML = `
-                    <div style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        <span style="font-weight: 700; color: var(--text-dark);">${item.qty}x</span> ${item.name}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--theme-primary); font-weight: 700;">$${itemTotal.toFixed(2)}</span>
-                        <div style="display: flex; gap: 0.25rem;">
-                            <button class="cart-qty-btn" onclick="updateLocalQty('${item.name}', -1)">-</button>
-                            <button class="cart-qty-btn" onclick="updateLocalQty('${item.name}', 1)">+</button>
-                        </div>
-                    </div>
-                `;
+    <div style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        <span style="font-weight: 700; color: var(--text-dark);">${item.qty}x</span> ${item.name}
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="color: var(--theme-primary); font-weight: 700;">$${itemTotal.toFixed(2)}</span>
+        <div style="display: flex; gap: 0.25rem;">
+            <button class="cart-qty-btn" onclick="updateLocalQty('${item.name}', -1)">-</button>
+            <button class="cart-qty-btn" onclick="updateLocalQty('${item.name}', 1)">+</button>
+        </div>
+    </div>
+`;
                 container.appendChild(row);
             });
 
@@ -884,7 +967,7 @@
             const bannerMsg = document.getElementById('success-banner-msg');
 
             bannerMsg.innerText = message;
-            
+
             if (type === "warning") {
                 banner.style.backgroundColor = "#fffbeb";
                 banner.style.borderColor = "#fef3c7";
@@ -913,4 +996,5 @@
     </script>
 
 </body>
+
 </html>
