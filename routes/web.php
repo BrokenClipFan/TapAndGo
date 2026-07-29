@@ -5,14 +5,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\CostumerController;
+use App\Http\Controllers\TicketController;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/', function () {
-        return view('costumers');
-});
+Route::get('/', [CostumerController::class, 'index'])->name('costumer');
+Route::post('/order/store', [CostumerController::class, 'store']);
+
+Route::get('/ticket/{order}', TicketController::class)->name('ticket');
 
 Route::get('/cashier', function () {
         return view('cashier.index');

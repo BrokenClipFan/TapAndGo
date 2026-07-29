@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('total_price', 10, 2);
-            $table->string('order_code');
-            $table->string('status')->default('pending'); // e.g., pending, shipped, delivered, cancelled
-            $table->timestamps();
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->decimal('total', 8,2)->after('price');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::table('order_items', function (Blueprint $table) {
+            //
+        });
     }
 };
