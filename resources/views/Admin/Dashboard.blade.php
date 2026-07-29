@@ -177,8 +177,6 @@
 
                 <!-- Section 1: KPI Statistics Summary Cards -->
                 <div class="row g-3 flex-shrink-0" id="view-overview">
-
-                    <!-- KPI 1: Total Revenue -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="card border-0 shadow-sm rounded-3 kpi-card">
                             <div class="card-body p-3">
@@ -209,7 +207,6 @@
                         </div>
                     </div>
 
-                    <!-- KPI 2: Orders Processed -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="card border-0 shadow-sm rounded-3 kpi-card">
                             <div class="card-body p-3">
@@ -240,7 +237,6 @@
                         </div>
                     </div>
 
-                    <!-- KPI 3: Tax Accrued -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="card border-0 shadow-sm rounded-3 kpi-card">
                             <div class="card-body p-3">
@@ -271,7 +267,6 @@
                         </div>
                     </div>
 
-                    <!-- KPI 4: Active Kiosks -->
                     <div class="col-sm-6 col-xl-3">
                         <div class="card border-0 shadow-sm rounded-3 kpi-card">
                             <div class="card-body p-3">
@@ -348,7 +343,6 @@
                                 </button>
                             </div>
 
-                            <!-- Category Container -->
                             <div class="card-body p-3 overflow-auto custom-scroll" style="max-height: 250px;"
                                 id="categoriesContainer">
                                 <ul class="list-group list-group-flush" id="categoryList">
@@ -377,8 +371,6 @@
 
                                             <div class="d-flex align-items-center gap-2 flex-shrink-0">
                                                 <span class="fw-bold text-brand-navy me-1">$775.00</span>
-
-                                                <!-- Action Buttons -->
                                                 <button
                                                     class="btn btn-sm btn-outline-primary py-0 px-2 btn-edit-category"
                                                     data-id="{{ $category->id }}" data-name="{{ $category->name }}"
@@ -406,7 +398,7 @@
                         <div>
                             <h6 class="fw-bold text-brand-navy mb-0"><i
                                     class="bi bi-boxes me-2 text-brand-orange"></i>Inventory & Stock Control</h6>
-                            <small class="text-muted">Monitor item ingredients, availability, and restock
+                            <small class="text-muted">Monitor product items, pricing, availability, and restock
                                 alerts</small>
                         </div>
                         <div class="d-flex gap-2">
@@ -416,7 +408,7 @@
                             </select>
                             <button class="btn btn-brand-orange btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#addItemModal">
-                                <i class="bi bi-plus-circle me-1"></i> Add Item
+                                <i class="bi bi-plus-circle me-1"></i> Add Product
                             </button>
                         </div>
                     </div>
@@ -426,90 +418,67 @@
                                 <tr>
                                     <th scope="col" class="ps-3">Item Name</th>
                                     <th scope="col">Category</th>
+                                    <th scope="col">Price</th>
                                     <th scope="col">Stock Status</th>
                                     <th scope="col" class="text-center">Remaining Quantity</th>
                                     <th scope="col" class="text-end pe-3">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-id="101" data-qty="180" data-max="200" data-status="ok"
-                                    data-sku="#ING-101">
-                                    <td class="ps-3">
-                                        <strong class="text-brand-navy item-name">Classic Beef Patties</strong>
-                                        <br><small class="text-muted sku-text">SKU: #ING-101</small>
-                                    </td>
-                                    <td><span class="badge bg-light text-dark border category-badge">Ingredients</span>
-                                    </td>
-                                    <td class="status-cell"><span class="badge bg-success"><i
-                                                class="bi bi-check-circle me-1"></i> In Stock</span></td>
-                                    <td class="text-center">
-                                        <div class="fw-bold text-brand-navy qty-text">180 pcs</div>
-                                        <div class="progress mt-1 mx-auto" style="height: 6px; width: 100px;">
-                                            <div class="progress-bar bg-success progress-bar-fill"
-                                                style="width: 90%;"></div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-3">
-                                        <button class="btn btn-sm btn-outline-primary btn-restock"><i
-                                                class="bi bi-plus-lg"></i> Restock</button>
-                                        <button class="btn btn-sm btn-outline-secondary btn-edit-item"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger btn-delete-item"><i
-                                                class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr data-id="104" data-qty="15" data-max="100" data-status="low"
-                                    data-sku="#ING-104">
-                                    <td class="ps-3">
-                                        <strong class="text-brand-navy item-name">Cheddar Cheese Slices</strong>
-                                        <br><small class="text-muted sku-text">SKU: #ING-104</small>
-                                    </td>
-                                    <td><span class="badge bg-light text-dark border category-badge">Ingredients</span>
-                                    </td>
-                                    <td class="status-cell"><span class="badge bg-warning text-dark"><i
-                                                class="bi bi-exclamation-triangle me-1"></i> Low Stock</span></td>
-                                    <td class="text-center">
-                                        <div class="fw-bold text-danger qty-text">15 pcs</div>
-                                        <div class="progress mt-1 mx-auto" style="height: 6px; width: 100px;">
-                                            <div class="progress-bar bg-warning progress-bar-fill"
-                                                style="width: 15%;"></div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-3">
-                                        <button class="btn btn-sm btn-brand-orange btn-restock"><i
-                                                class="bi bi-plus-lg"></i> Restock</button>
-                                        <button class="btn btn-sm btn-outline-secondary btn-edit-item"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger btn-delete-item"><i
-                                                class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr data-id="302" data-qty="0" data-max="50" data-status="out"
-                                    data-sku="#BEV-302">
-                                    <td class="ps-3">
-                                        <strong class="text-brand-navy item-name">Cold Milkshake Base</strong>
-                                        <br><small class="text-muted sku-text">SKU: #BEV-302</small>
-                                    </td>
-                                    <td><span class="badge bg-light text-dark border category-badge">Beverages</span>
-                                    </td>
-                                    <td class="status-cell"><span class="badge bg-danger"><i
-                                                class="bi bi-x-circle me-1"></i> Out of Stock</span></td>
-                                    <td class="text-center">
-                                        <div class="fw-bold text-danger qty-text">0 pcs</div>
-                                        <div class="progress mt-1 mx-auto" style="height: 6px; width: 100px;">
-                                            <div class="progress-bar bg-danger progress-bar-fill" style="width: 0%;">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-3">
-                                        <button class="btn btn-sm btn-danger btn-restock"><i
-                                                class="bi bi-plus-lg"></i> Restock</button>
-                                        <button class="btn btn-sm btn-outline-secondary btn-edit-item"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger btn-delete-item"><i
-                                                class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
+                                @foreach ($products as $product)
+                                    @php
+                                        if ($product->stock <= 0) {
+                                            $status = 'out';
+                                            $badgeClass = 'bg-danger';
+                                            $statusIcon = 'bi-x-circle';
+                                            $statusText = 'Out of Stock';
+                                            $qtyClass = 'text-danger';
+                                            $btnClass = 'btn-danger';
+                                        } elseif ($product->stock < 20) {
+                                            $status = 'low';
+                                            $badgeClass = 'bg-warning text-dark';
+                                            $statusIcon = 'bi-exclamation-triangle';
+                                            $statusText = 'Low Stock';
+                                            $qtyClass = 'text-danger';
+                                            $btnClass = 'btn-brand-orange';
+                                        } else {
+                                            $status = 'ok';
+                                            $badgeClass = 'bg-success';
+                                            $statusIcon = 'bi-check-circle';
+                                            $statusText = 'In Stock';
+                                            $qtyClass = 'text-brand-navy';
+                                            $btnClass = 'btn-outline-primary';
+                                        }
+                                    @endphp
+                                    <tr data-id="{{ $product->id }}" data-qty="{{ $product->stock }}"
+                                        data-price="{{ $product->price }}" data-status="{{ $status }}">
+                                        <td class="ps-3">
+                                            <strong class="text-brand-navy item-name">{{ $product->name }}</strong>
+                                        </td>
+                                        <td><span
+                                                class="badge bg-light text-dark border category-badge">{{ $product->category->name }}</span>
+                                        </td>
+                                        <td class="price-cell">₱<span class="price-val">{{ $product->price }}</span>
+                                        </td>
+                                        <td class="status-cell">
+                                            <span class="badge {{ $badgeClass }}"><i
+                                                    class="bi {{ $statusIcon }} me-1"></i>
+                                                {{ $statusText }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="fw-bold {{ $qtyClass }} qty-text">{{ $product->stock }}
+                                                pcs</div>
+                                        </td>
+                                        <td class="text-end pe-3">
+                                            <button class="btn btn-sm {{ $btnClass }} btn-restock"><i
+                                                    class="bi bi-plus-lg"></i> Restock</button>
+                                            <button class="btn btn-sm btn-outline-secondary btn-edit-item"><i
+                                                    class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger btn-delete-item"><i
+                                                    class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -658,7 +627,7 @@
                                 style="width: 80px; height: 80px; object-fit: cover;">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Category Name (Optional)</label>
+                            <label class="form-label fw-semibold">Category Name</label>
                             <input type="text" class="form-control" id="editCatName" name="name" required>
                         </div>
                         <div class="mb-3">
@@ -708,96 +677,106 @@
         </div>
     </div>
 
-    <!-- ==================== INVENTORY ITEM MODALS ==================== -->
+    <!-- ==================== PRODUCT (INVENTORY) MODALS ==================== -->
 
-    <!-- ADD INVENTORY ITEM MODAL -->
+    <!-- ADD PRODUCT MODAL -->
     <div class="modal fade" id="addItemModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-brand-navy text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-2 text-brand-orange"></i>Add New Stock
-                        Item</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-2 text-brand-orange"></i>Add New
+                        Product</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form id="addItemForm">
+                <form id="addItemForm" action="{{ route('admin.product.store') }}" enctype="multipart/form-data"
+                    method="POST">
+                    @csrf
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Item Name</label>
-                            <input type="text" class="form-control" id="inputItemName" required
-                                placeholder="e.g. Hamburger Buns">
+                            <input type="text" name="name" class="form-control" id="inputItemName" required
+                                placeholder="e.g. Cheese Burger">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Category</label>
-                            <select class="form-select" id="inputCategory">
-                                <option value="Ingredients">Ingredients</option>
-                                <option value="Beverages">Beverages</option>
-                                <option value="Packaging">Packaging</option>
+                            <select class="form-select" name="category_id" id="inputCategory" required>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">Initial Quantity</label>
-                                <input type="number" class="form-control" id="inputQty" min="0"
-                                    value="50" required>
+                                <label class="form-label fw-semibold">Price (₱)</label>
+                                <input type="number" step="0.01" name="price" class="form-control"
+                                    id="inputPrice" min="0" placeholder="0.00" required>
                             </div>
                             <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">Max Target Stock</label>
-                                <input type="number" class="form-control" id="inputMax" min="1"
-                                    value="100" required>
+                                <label class="form-label fw-semibold">Quantity</label>
+                                <input type="number" name="quantity" class="form-control" id="inputQty"
+                                    min="0" value="50" required>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Product Image</label>
+                            <input type="file" name="image" class="form-control" id="imgInput"
+                                accept="image/*" required>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Add
-                            to Inventory</button>
+                            Product</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- EDIT INVENTORY ITEM MODAL -->
+    <!-- EDIT PRODUCT MODAL -->
     <div class="modal fade" id="editItemModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-brand-navy text-white">
                     <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2 text-brand-orange"></i>Edit
-                        Inventory Item</h5>
+                        Product</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form id="editItemForm">
-                    <input type="hidden" id="editItemId">
+                <form id="editItemForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="editItemId" name="id">
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Item Name</label>
-                            <input type="text" class="form-control" id="editItemName" required>
+                            <input type="text" name="name" class="form-control" id="editItemName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Category</label>
+                            <select class="form-select" name="category_id" id="editItemCategory" required>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">SKU Code</label>
-                                <input type="text" class="form-control" id="editItemSku" required>
+                                <label class="form-label fw-semibold">Price (₱)</label>
+                                <input type="number" step="0.01" name="price" class="form-control"
+                                    id="editItemPrice" min="0" required>
                             </div>
                             <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">Category</label>
-                                <select class="form-select" id="editItemCategory">
-                                    <option value="Ingredients">Ingredients</option>
-                                    <option value="Beverages">Beverages</option>
-                                    <option value="Packaging">Packaging</option>
-                                </select>
+                                <label class="form-label fw-semibold">Quantity</label>
+                                <input type="number" name="quantity" class="form-control" id="editItemQty"
+                                    min="0" required>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">Current Quantity</label>
-                                <input type="number" class="form-control" id="editItemQty" min="0" required>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <label class="form-label fw-semibold">Max Stock Target</label>
-                                <input type="number" class="form-control" id="editItemMax" min="1" required>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Change Image (Optional)</label>
+                            <input type="file" name="image" class="form-control" id="editItemImg"
+                                accept="image/*">
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
@@ -810,7 +789,7 @@
         </div>
     </div>
 
-    <!-- DELETE INVENTORY ITEM MODAL -->
+    <!-- DELETE PRODUCT MODAL -->
     <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
@@ -820,17 +799,21 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4 text-center">
-                    <i class="bi bi-box-seam text-danger display-4 d-block mb-3"></i>
-                    <h5>Remove Stock Item?</h5>
-                    <p class="text-muted mb-0">Are you sure you want to remove <strong id="deleteItemNameText"
-                            class="text-dark">this item</strong> from inventory? This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer bg-light border-0 justify-content-center">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger px-4" id="btnConfirmDeleteItem"><i
-                            class="bi bi-trash me-1"></i> Delete Item</button>
-                </div>
+                <form id="deleteItemForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-body p-4 text-center">
+                        <i class="bi bi-box-seam text-danger display-4 d-block mb-3"></i>
+                        <h5>Remove Stock Item?</h5>
+                        <p class="text-muted mb-0">Are you sure you want to remove <strong id="deleteItemNameText"
+                                class="text-dark">this item</strong> from inventory? This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer bg-light border-0 justify-content-center">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger px-4" id="btnConfirmDeleteItem"><i
+                                class="bi bi-trash me-1"></i> Delete Item</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -860,321 +843,168 @@
                 });
             });
 
-            // 2. DYNAMIC TIMEFRAME CLICK LISTENERS FOR KPI METRICS
-            const kpiDataMap = {
-                revenue: {
-                    today: {
-                        val: '$1,482.50',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+12.4% vs yesterday'
-                    },
-                    weekly: {
-                        val: '$9,840.00',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+18.2% vs last week'
-                    },
-                    monthly: {
-                        val: '$42,150.00',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+5.6% vs last month'
-                    },
-                    yearly: {
-                        val: '$512,000.00',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+22.1% vs last year'
-                    }
-                },
-                orders: {
-                    today: {
-                        val: '142',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+8.1% vs yesterday'
-                    },
-                    weekly: {
-                        val: '980',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+14.0% vs last week'
-                    },
-                    monthly: {
-                        val: '4,120',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+3.2% vs last month'
-                    },
-                    yearly: {
-                        val: '49,800',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>+19.8% vs last year'
-                    }
-                },
-                tax: {
-                    today: {
-                        val: '$134.77',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>10% Standard VAT'
-                    },
-                    weekly: {
-                        val: '$894.50',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>10% Standard VAT'
-                    },
-                    monthly: {
-                        val: '$3,831.80',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>10% Standard VAT'
-                    },
-                    yearly: {
-                        val: '$46,545.00',
-                        trend: '<i class="bi bi-arrow-up-right me-1"></i>10% Standard VAT'
-                    }
-                }
-            };
-
-            document.querySelectorAll('.timeframe-select').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const kpiType = this.dataset.kpi;
-                    const range = this.dataset.range;
-                    const capitalizedRange = range.charAt(0).toUpperCase() + range.slice(1);
-
-                    if (kpiType === 'revenue') {
-                        document.getElementById('kpiRevenueTimeframe').textContent =
-                            capitalizedRange;
-                        document.getElementById('kpiRevenueVal').textContent = kpiDataMap.revenue[
-                            range].val;
-                        document.getElementById('kpiRevenueTrend').innerHTML = kpiDataMap.revenue[
-                            range].trend;
-                    } else if (kpiType === 'orders') {
-                        document.getElementById('kpiOrdersTimeframe').textContent =
-                            capitalizedRange;
-                        document.getElementById('kpiOrdersVal').textContent = kpiDataMap.orders[
-                            range].val;
-                        document.getElementById('kpiOrdersTrend').innerHTML = kpiDataMap.orders[
-                            range].trend;
-                    } else if (kpiType === 'tax') {
-                        document.getElementById('kpiTaxTimeframe').textContent = capitalizedRange;
-                        document.getElementById('kpiTaxVal').textContent = kpiDataMap.tax[range]
-                            .val;
-                        document.getElementById('kpiTaxTrend').innerHTML = kpiDataMap.tax[range]
-                            .trend;
-                    }
-                });
-            });
-
-            // 3. EDIT & DELETE CATEGORY EVENT LISTENERS
+            // 2. CATEGORY ACTION HANDLERS (EDIT & DELETE)
             const categoryList = document.getElementById('categoryList');
             if (categoryList) {
                 categoryList.addEventListener('click', function(e) {
-                    const editBtn = e.target.closest('.btn-edit-category');
-                    const deleteBtn = e.target.closest('.btn-delete-category');
+                    const editCatBtn = e.target.closest('.btn-edit-category');
+                    const deleteCatBtn = e.target.closest('.btn-delete-category');
 
-                    if (editBtn) {
-                        const id = editBtn.dataset.id;
-                        const name = editBtn.dataset.name;
-                        const img = editBtn.dataset.img;
+                    if (editCatBtn) {
+                        const catId = editCatBtn.dataset.id;
+                        const catName = editCatBtn.dataset.name;
+                        const catImg = editCatBtn.dataset.img;
 
-                        document.getElementById('editCategoryId').value = id;
-                        document.getElementById('editCatName').value = name;
+                        const editCatForm = document.getElementById('editCategoryForm');
+                        editCatForm.action = `/admin/category/update/${catId}`;
+
+                        document.getElementById('editCategoryId').value = catId;
+                        document.getElementById('editCatName').value = catName;
 
                         const previewContainer = document.getElementById('editCatPreviewContainer');
-                        const previewImg = document.getElementById('editCatImgPreview');
-                        if (img) {
-                            previewImg.src = img;
+                        const imgPreview = document.getElementById('editCatImgPreview');
+                        if (catImg) {
+                            imgPreview.src = catImg;
                             previewContainer.classList.remove('d-none');
                         } else {
                             previewContainer.classList.add('d-none');
                         }
 
-                        // Update backend form action route
-                        document.getElementById('editCategoryForm').action = `/admin/category/update/${id}`;
-
-                        const editModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
-                        editModal.show();
+                        const editCatModal = new bootstrap.Modal(document.getElementById(
+                            'editCategoryModal'));
+                        editCatModal.show();
                     }
 
-                    if (deleteBtn) {
-                        const id = deleteBtn.dataset.id;
-                        const name = deleteBtn.dataset.name || 'this category';
+                    if (deleteCatBtn) {
+                        const catId = deleteCatBtn.dataset.id;
+                        const catName = deleteCatBtn.dataset.name;
 
-                        document.getElementById('deleteCatNameText').textContent = name;
-                        document.getElementById('deleteCategoryForm').action =
-                            `/admin/category/delete/${id}`;
+                        const deleteCatForm = document.getElementById('deleteCategoryForm');
+                        deleteCatForm.action = `/admin/category/delete/${catId}`;
 
-                        const deleteModal = new bootstrap.Modal(document.getElementById(
+                        document.getElementById('deleteCatNameText').textContent = catName;
+
+                        const deleteCatModal = new bootstrap.Modal(document.getElementById(
                             'deleteCategoryModal'));
-                        deleteModal.show();
+                        deleteCatModal.show();
                     }
                 });
             }
 
-            // 4. STOCK LEVEL & BADGE REFRESH HELPER
+            // 3. STOCK LEVEL & BADGE REFRESH HELPER
             function updateRowStockState(row, newQty) {
-                const max = parseInt(row.dataset.max) || 100;
                 row.dataset.qty = newQty;
 
                 const qtyText = row.querySelector('.qty-text');
-                const progressBar = row.querySelector('.progress-bar-fill');
                 const statusCell = row.querySelector('.status-cell');
                 const restockBtn = row.querySelector('.btn-restock');
 
-                const percent = Math.min(Math.round((newQty / max) * 100), 100);
                 qtyText.textContent = `${newQty} pcs`;
-                progressBar.style.width = `${percent}%`;
 
                 if (newQty <= 0) {
                     row.dataset.status = 'out';
                     statusCell.innerHTML =
                         `<span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Out of Stock</span>`;
-                    progressBar.className = 'progress-bar bg-danger progress-bar-fill';
                     restockBtn.className = 'btn btn-sm btn-danger btn-restock';
                     qtyText.className = 'fw-bold text-danger qty-text';
-                } else if (percent < 25) {
+                } else if (newQty < 20) {
                     row.dataset.status = 'low';
                     statusCell.innerHTML =
                         `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i> Low Stock</span>`;
-                    progressBar.className = 'progress-bar bg-warning progress-bar-fill';
                     restockBtn.className = 'btn btn-sm btn-brand-orange btn-restock';
                     qtyText.className = 'fw-bold text-danger qty-text';
                 } else {
                     row.dataset.status = 'ok';
                     statusCell.innerHTML =
                         `<span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> In Stock</span>`;
-                    progressBar.className = 'progress-bar bg-success progress-bar-fill';
                     restockBtn.className = 'btn btn-sm btn-outline-primary btn-restock';
                     qtyText.className = 'fw-bold text-brand-navy qty-text';
                 }
             }
 
-            // 5. RESTOCK, EDIT & DELETE INVENTORY ITEMS LOGIC
+            // INITIALIZE ALL INVENTORY ROWS ON LOAD
+            const inventoryRows = document.querySelectorAll('#inventoryTable tbody tr');
+            inventoryRows.forEach(row => {
+                const qty = parseInt(row.dataset.qty) || 0;
+                updateRowStockState(row, qty);
+            });
+
+            // 4. RESTOCK, EDIT & DELETE PRODUCT INVENTORY ITEMS
             let activeTargetRow = null;
             const inventoryTable = document.getElementById('inventoryTable');
 
-            inventoryTable.addEventListener('click', function(e) {
-                const restockBtn = e.target.closest('.btn-restock');
-                const editBtn = e.target.closest('.btn-edit-item');
-                const deleteBtn = e.target.closest('.btn-delete-item');
+            if (inventoryTable) {
+                inventoryTable.addEventListener('click', function(e) {
+                    const restockBtn = e.target.closest('.btn-restock');
+                    const editBtn = e.target.closest('.btn-edit-item');
+                    const deleteBtn = e.target.closest('.btn-delete-item');
 
-                if (restockBtn) {
-                    const row = restockBtn.closest('tr');
-                    const itemName = row.querySelector('.item-name').textContent;
-                    const currentQty = parseInt(row.dataset.qty) || 0;
+                    if (restockBtn) {
+                        const row = restockBtn.closest('tr');
+                        const itemName = row.querySelector('.item-name').textContent;
+                        const currentQty = parseInt(row.dataset.qty) || 0;
 
-                    const addQty = prompt(
-                        `Restock "${itemName}"\nCurrent quantity: ${currentQty}\nEnter amount to add:`,
-                        "50");
-                    if (addQty !== null && !isNaN(addQty) && parseInt(addQty) > 0) {
-                        const newTotal = currentQty + parseInt(addQty);
-                        updateRowStockState(row, newTotal);
+                        const addQty = prompt(
+                            `Restock "${itemName}"\nCurrent quantity: ${currentQty}\nEnter amount to add:`,
+                            "50");
+                        if (addQty !== null && !isNaN(addQty) && parseInt(addQty) > 0) {
+                            const newTotal = currentQty + parseInt(addQty);
+                            updateRowStockState(row, newTotal);
+                        }
                     }
-                }
 
-                if (editBtn) {
-                    activeTargetRow = editBtn.closest('tr');
-                    document.getElementById('editItemId').value = activeTargetRow.dataset.id || '';
-                    document.getElementById('editItemName').value = activeTargetRow.querySelector(
-                        '.item-name').textContent;
-                    document.getElementById('editItemSku').value = activeTargetRow.dataset.sku ||
-                        activeTargetRow.querySelector('.sku-text').textContent.replace('SKU: ', '');
-                    document.getElementById('editItemCategory').value = activeTargetRow.querySelector(
-                        '.category-badge').textContent.trim();
-                    document.getElementById('editItemQty').value = activeTargetRow.dataset.qty;
-                    document.getElementById('editItemMax').value = activeTargetRow.dataset.max;
+                    if (editBtn) {
+                        activeTargetRow = editBtn.closest('tr');
+                        const productId = activeTargetRow.dataset.id;
 
-                    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-                    editModal.show();
-                }
+                        const editForm = document.getElementById('editItemForm');
+                        editForm.action = `/admin/product/update/${productId}`;
 
-                if (deleteBtn) {
-                    activeTargetRow = deleteBtn.closest('tr');
-                    const name = activeTargetRow.querySelector('.item-name').textContent;
-                    document.getElementById('deleteItemNameText').textContent = name;
+                        document.getElementById('editItemId').value = productId || '';
+                        document.getElementById('editItemName').value = activeTargetRow.querySelector(
+                            '.item-name').textContent.trim();
+                        document.getElementById('editItemPrice').value = activeTargetRow.dataset.price ||
+                            activeTargetRow.querySelector('.price-val').textContent.trim();
+                        document.getElementById('editItemQty').value = activeTargetRow.dataset.qty;
 
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
-                    deleteModal.show();
-                }
-            });
+                        const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
+                        editModal.show();
+                    }
 
-            // Submit Edited Inventory Item
-            document.getElementById('editItemForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!activeTargetRow) return;
+                    if (deleteBtn) {
+                        activeTargetRow = deleteBtn.closest('tr');
+                        const productId = activeTargetRow.dataset.id;
+                        const name = activeTargetRow.querySelector('.item-name').textContent;
 
-                const name = document.getElementById('editItemName').value;
-                const sku = document.getElementById('editItemSku').value;
-                const category = document.getElementById('editItemCategory').value;
-                const qty = parseInt(document.getElementById('editItemQty').value) || 0;
-                const max = parseInt(document.getElementById('editItemMax').value) || 100;
+                        const deleteForm = document.getElementById('deleteItemForm');
+                        deleteForm.action = `/admin/product/delete/${productId}`;
 
-                activeTargetRow.querySelector('.item-name').textContent = name;
-                activeTargetRow.querySelector('.sku-text').textContent = `SKU: ${sku}`;
-                activeTargetRow.querySelector('.category-badge').textContent = category;
-                activeTargetRow.dataset.sku = sku;
-                activeTargetRow.dataset.max = max;
+                        document.getElementById('deleteItemNameText').textContent = name;
 
-                updateRowStockState(activeTargetRow, qty);
-
-                bootstrap.Modal.getInstance(document.getElementById('editItemModal')).hide();
-            });
-
-            // Confirm Delete Inventory Item
-            document.getElementById('btnConfirmDeleteItem').addEventListener('click', function() {
-                if (activeTargetRow) {
-                    activeTargetRow.remove();
-                    activeTargetRow = null;
-                }
-                bootstrap.Modal.getInstance(document.getElementById('deleteItemModal')).hide();
-            });
-
-            // 6. ADD NEW INVENTORY ITEM
-            const addItemForm = document.getElementById('addItemForm');
-            addItemForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const name = document.getElementById('inputItemName').value.trim();
-                const category = document.getElementById('inputCategory').value;
-                const qty = parseInt(document.getElementById('inputQty').value) || 0;
-                const max = parseInt(document.getElementById('inputMax').value) || 100;
-                const sku = '#ING-' + Math.floor(100 + Math.random() * 900);
-
-                const tbody = inventoryTable.querySelector('tbody');
-                const newRow = document.createElement('tr');
-                newRow.dataset.qty = qty;
-                newRow.dataset.max = max;
-                newRow.dataset.sku = sku;
-
-                newRow.innerHTML = `
-                    <td class="ps-3">
-                        <strong class="text-brand-navy item-name">${name}</strong>
-                        <br><small class="text-muted sku-text">SKU: ${sku}</small>
-                    </td>
-                    <td><span class="badge bg-light text-dark border category-badge">${category}</span></td>
-                    <td class="status-cell"></td>
-                    <td class="text-center">
-                        <div class="fw-bold qty-text">${qty} pcs</div>
-                        <div class="progress mt-1 mx-auto" style="height: 6px; width: 100px;">
-                            <div class="progress-bar progress-bar-fill" style="width: 0%;"></div>
-                        </div>
-                    </td>
-                    <td class="text-end pe-3">
-                        <button class="btn btn-sm btn-outline-primary btn-restock"><i class="bi bi-plus-lg"></i> Restock</button>
-                        <button class="btn btn-sm btn-outline-secondary btn-edit-item"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-sm btn-outline-danger btn-delete-item"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-
-                tbody.appendChild(newRow);
-                updateRowStockState(newRow, qty);
-
-                const modalEl = document.getElementById('addItemModal');
-                const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                if (modalInstance) modalInstance.hide();
-
-                addItemForm.reset();
-            });
-
-            // 7. INVENTORY FILTERING
-            const stockFilter = document.getElementById('stockFilter');
-            stockFilter.addEventListener('change', function() {
-                const value = this.value;
-                const rows = inventoryTable.querySelectorAll('tbody tr');
-
-                rows.forEach(row => {
-                    const status = row.dataset.status;
-                    if (value === 'all') {
-                        row.style.display = '';
-                    } else if (value === 'low') {
-                        row.style.display = (status === 'low' || status === 'out') ? '' : 'none';
+                        const deleteModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+                        deleteModal.show();
                     }
                 });
-            });
+            }
+
+            // 5. INVENTORY FILTERING
+            const stockFilter = document.getElementById('stockFilter');
+            if (stockFilter) {
+                stockFilter.addEventListener('change', function() {
+                    const value = this.value;
+                    const rows = inventoryTable.querySelectorAll('tbody tr');
+
+                    rows.forEach(row => {
+                        const status = row.dataset.status;
+                        if (value === 'all') {
+                            row.style.display = '';
+                        } else if (value === 'low') {
+                            row.style.display = (status === 'low' || status === 'out') ? '' :
+                            'none';
+                        }
+                    });
+                });
+            }
 
         });
     </script>

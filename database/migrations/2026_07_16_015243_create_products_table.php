@@ -15,13 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('slug')->unique(); // For URLs
-            $table->text('description')->nullable();
             $table->decimal('price', 10, 2); // Increased to 10 for larger amounts
             $table->integer('stock')->default(0);
-            $table->string('sku')->unique()->nullable();
             $table->string('image_path')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
