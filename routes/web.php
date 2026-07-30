@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\CostumerController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CashierController;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -20,6 +21,8 @@ Route::get('/ticket/{order}', TicketController::class)->name('ticket');
 Route::get('/cashier', function () {
         return view('cashier.index');
 });
+
+Route::post('/cashier/order', [CashierController::class, 'view'])->name('cashier.order');
 
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 

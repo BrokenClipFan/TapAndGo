@@ -22,7 +22,7 @@ class ProductController extends Controller
         $validated['image_path'] = $request->file('image')->store('products', 'public');
         $validated['stock'] = $request->quantity;
 
-        Product::create($validated);
+        Product::create($validated);    
 
         return redirect()->route('admin.dashboard')->with('success', 'A new product has been created');
     }

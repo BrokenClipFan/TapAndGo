@@ -51,6 +51,7 @@ class CostumerController extends Controller
 
             $items[] = [
                 'product_id' => $item['id'],
+                'name'       => $item['name'],
                 'quantity'   => $item['qty'],
                 'price'      => $item['price'],
                 'total'      => $total
