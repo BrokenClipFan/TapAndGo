@@ -20,7 +20,7 @@ class CostumerController extends Controller
     }
 
     private function generateCode() {
-        $code = strtoupper(bin2hex(random_bytes(6)));
+        $code = strtoupper(bin2hex(random_bytes(4)));
         $chunks = str_split($code, 4);
         return implode('-', $chunks);
     }
