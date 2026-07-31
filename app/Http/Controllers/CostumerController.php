@@ -88,10 +88,6 @@ class CostumerController extends Controller
 
             DB::commit();
 
-            $product->update([
-                'stock' => $remainingStock
-            ]);
-
             $order = Order::create([
                 'order_code'  => $code,
                 'total_price' => $grandTotal,
