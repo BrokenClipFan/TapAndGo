@@ -17,13 +17,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-        :root {
-            --theme-primary: #1a4373;
-            --theme-accent: #f97316;
-            --theme-dark: #0f172a;
-            --theme-success: #10b981;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             user-select: none;
@@ -273,6 +266,38 @@
         </div>
     </div>
 
+    <!-- UNAVAILABLE ITEMS / ERROR MODAL -->
+    <div id="modal-unavailable"
+        class="hidden fixed inset-0 bg-slate-900/60 z-50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-red-500 transform transition-all">
+            <div class="p-6 text-center">
+                <div
+                    class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+
+                <h3 id="modal-error-title" class="text-xl font-black text-slate-900 mb-1">Stock Limit Reached</h3>
+                <p id="modal-error-message" class="text-xs text-slate-500 mb-4">Some items in your order are currently
+                    unavailable or exceed available stock.</p>
+
+                <!-- Dynamic List Container -->
+                <div id="modal-item-list-container"
+                    class="hidden mb-6 bg-red-50 border border-red-100 rounded-2xl p-4 text-left max-h-40 overflow-y-auto kiosk-scroll">
+                    <span class="text-[10px] font-black uppercase text-red-500 tracking-wider block mb-2">Unavailable /
+                        Over Limit:</span>
+                    <ul id="modal-item-list" class="space-y-1 text-xs font-bold text-slate-700 list-disc list-inside">
+                    </ul>
+                </div>
+
+                <button onclick="closeUnavailableModal()"
+                    class="w-full bg-[#1a4373] hover:bg-blue-900 text-white font-black py-3.5 rounded-xl shadow-lg transition-all active:scale-95 text-sm uppercase tracking-wide">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT STATE CONTROLLER -->
     <script>
         const productsData = @json($products);
@@ -281,10 +306,6 @@
         let currentOrderType = "Dine In";
         let activeCategoryId = categoriesData.length > 0 ? categoriesData[0].id : null;
         let cart = [];
-
-        // Timer Variables
-        let successCountdown = 30;
-        let countdownTimer = null;
 
         function selectOrderType(type) {
             currentOrderType = type;
@@ -300,6 +321,36 @@
                 const firstCategory = categoriesData.find(c => c.id === activeCategoryId);
                 filterCategory(activeCategoryId, firstCategory ? firstCategory.name : 'Products');
             }
+        }
+
+        function showUnavailableModal(items = [], title = "Stock Limit Reached", message = null) {
+            const modal = document.getElementById('modal-unavailable');
+            const titleEl = document.getElementById('modal-error-title');
+            const msgEl = document.getElementById('modal-error-message');
+            const listContainer = document.getElementById('modal-item-list-container');
+            const listEl = document.getElementById('modal-item-list');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message ||
+                "Some items in your basket are currently unavailable or exceed available stock limits.";
+
+            listEl.innerHTML = '';
+            if (items && items.length > 0) {
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerText = item;
+                    listEl.appendChild(li);
+                });
+                listContainer.classList.remove('hidden');
+            } else {
+                listContainer.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeUnavailableModal() {
+            document.getElementById('modal-unavailable').classList.add('hidden');
         }
 
         function filterCategory(categoryId, categoryName) {
@@ -336,29 +387,49 @@
             filteredProducts.forEach(prod => {
                 const card = document.createElement('div');
                 card.className =
-                    "bg-white border border-slate-200 rounded-3xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-orange-200 transition-all";
+                    "bg-white border border-slate-200 rounded-3xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-orange-200 transition-all relative overflow-hidden";
 
                 const imageSrc = prod.image_path ? `/storage/${prod.image_path}` : null;
                 const isOutOfStock = prod.stock <= 0;
+                const isStatusUnavailable = prod.status && prod.status.toLowerCase() !== 'available';
+                const isDisabled = isOutOfStock || isStatusUnavailable;
+
+                let buttonLabel = 'Add';
+                if (isStatusUnavailable) {
+                    buttonLabel = 'Unavailable';
+                } else if (isOutOfStock) {
+                    buttonLabel = 'Out of Stock';
+                }
 
                 card.innerHTML = `
                     <div>
-                        <div class="w-full h-48 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-3.5 overflow-hidden">
+                        <div class="w-full h-48 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-3.5 overflow-hidden relative">
                             ${imageSrc 
-                                ? `<img src="${imageSrc}" class="w-full h-full object-cover rounded-2xl" alt="${prod.name}">` 
-                                : `<i class="bi bi-fast-front text-6xl text-[#1a4373]"></i>`
+                                ? `<img src="${imageSrc}" class="w-full h-full object-cover rounded-2xl ${isDisabled ? 'grayscale opacity-60' : ''}" alt="${prod.name}">` 
+                                : `<i class="bi bi-fast-front text-6xl text-[#1a4373] ${isDisabled ? 'opacity-40' : ''}"></i>`
                             }
+                            
+                            ${isDisabled ? `
+                                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-2">
+                                        <span class="bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-red-400/50 flex items-center gap-1">
+                                            <i class="bi bi-slash-circle-fill"></i>
+                                            ${isStatusUnavailable ? 'Not Available' : 'Out of Stock'}
+                                        </span>
+                                    </div>
+                                ` : ''}
                         </div>
                         <h5 class="font-extrabold text-slate-900 text-sm mb-1 line-clamp-1">${prod.name}</h5>
-                        <p class="text-slate-400 text-xs mb-3 line-clamp-1">Stock: ${prod.stock}</p>
+                        <p class="text-slate-400 text-xs mb-3 line-clamp-1">
+                            Stock: ${prod.stock} ${prod.status ? `• <span class="capitalize ${isStatusUnavailable ? 'text-red-500 font-bold' : 'text-emerald-600'}">${prod.status}</span>` : ''}
+                        </p>
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
                         <span class="text-[#1a4373] text-lg font-black">₱${parseFloat(prod.price).toFixed(2)}</span>
                         <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" 
-                            class="kiosk-btn-active ${isOutOfStock ? 'bg-slate-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600'} text-white rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wide flex items-center gap-1 shadow-md shadow-orange-500/10"
-                            ${isOutOfStock ? 'disabled' : ''}>
-                            <i class="bi bi-plus-circle"></i>
-                            <span>${isOutOfStock ? 'Out of Stock' : 'Add'}</span>
+                            class="kiosk-btn-active ${isDisabled ? 'bg-slate-300 opacity-70 cursor-not-allowed shadow-none' : 'bg-orange-500 hover:bg-orange-600 shadow-md shadow-orange-500/10'} text-white rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wide flex items-center gap-1 transition-all"
+                            ${isDisabled ? 'disabled' : ''}>
+                            <i class="bi ${isDisabled ? 'bi-x-circle' : 'bi-plus-circle'}"></i>
+                            <span>${buttonLabel}</span>
                         </button>
                     </div>
                 `;
@@ -367,10 +438,22 @@
         }
 
         function addToCart(id, name, price) {
+            const product = productsData.find(p => p.id === id);
+            const stockAvailable = product ? product.stock : 0;
+
             const existing = cart.find(item => item.id === id);
             if (existing) {
+                if (existing.qty >= stockAvailable) {
+                    showUnavailableModal([`${name} (Available: ${stockAvailable})`], "Stock Limit Reached",
+                        "You cannot add more than the available stock.");
+                    return;
+                }
                 existing.qty++;
             } else {
+                if (stockAvailable <= 0) {
+                    showUnavailableModal([name], "Out of Stock", "This item is currently out of stock.");
+                    return;
+                }
                 cart.push({
                     id,
                     name,
@@ -383,7 +466,15 @@
 
         function updateCartQty(id, delta) {
             const item = cart.find(item => item.id === id);
+            const product = productsData.find(p => p.id === id);
+            const stockAvailable = product ? product.stock : 0;
+
             if (item) {
+                if (delta > 0 && item.qty >= stockAvailable) {
+                    showUnavailableModal([`${item.name} (Max stock: ${stockAvailable})`], "Stock Limit Reached",
+                        "You have reached the maximum available quantity for this item.");
+                    return;
+                }
                 item.qty += delta;
                 if (item.qty <= 0) {
                     cart = cart.filter(i => i.id !== id);
@@ -477,8 +568,11 @@
                 items: cart
             };
 
+            const placeOrderBtn = document.getElementById('btn-place-order');
+            placeOrderBtn.disabled = true;
+
             try {
-                const response = await fetch('http://127.0.0.1:8000/order/store', {
+                const response = await fetch('/order/store', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -488,18 +582,26 @@
                     body: JSON.stringify(order)
                 });
 
-                // Parse response body as JSON
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    // Redirect to ticket page returned by Laravel
                     window.location.href = data.ticket_url;
                 } else {
-                    console.error('Order failed:', data);
-                }
+                    placeOrderBtn.disabled = false;
 
+                    if (data.unavailableItems && data.unavailableItems.length > 0) {
+                        showUnavailableModal(data.unavailableItems, "Order Submission Failed",
+                            "The following items exceed available stock:");
+                    } else if (data.message) {
+                        showUnavailableModal([], "Order Error", data.message);
+                    } else {
+                        showUnavailableModal([], "Order Error", "Validation failed. Please check your order items.");
+                    }
+                }
             } catch (error) {
-                console.error('Network or execution error:', error);
+                placeOrderBtn.disabled = false;
+                console.error('Network execution error:', error);
+                showUnavailableModal([], "Connection Error", "A network error occurred. Please try submitting again.");
             }
         }
     </script>

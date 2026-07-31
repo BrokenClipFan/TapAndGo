@@ -18,8 +18,6 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
         }
     </style>
 </head>
@@ -41,7 +39,7 @@
         <div class="my-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 p-5 space-y-4 relative">
             <div>
                 <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Order Ticket</span>
-                <h3 class="text-2xl font-extrabold text-[#1a4373]" id="success-order-id">#{{ $order->order_code }}</h3>
+                <h3 class="text-2xl font-extrabold text-[#1a4373]" id="success-order-id">#{{ $order->id }}</h3>
             </div>
 
             <!-- Scannable QR matrix block -->
@@ -77,6 +75,15 @@
                     <rect x="58" y="72" width="8" height="20" fill="#1a4373" rx="1" />
                     <rect x="70" y="78" width="12" height="12" fill="#f97316" rx="1" />
                 </svg>
+            </div>
+
+            <!-- Restored Code Block -->
+            <div>
+                <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest block">Pickup / Payment
+                    Code</span>
+                <strong
+                    class="text-2xl font-mono font-extrabold tracking-widest text-orange-500 bg-orange-100/50 px-4 py-1.5 rounded-lg border border-orange-200 inline-block mt-1"
+                    id="success-pass-code">{{ $order->order_code }}</strong>
             </div>
         </div>
 
@@ -129,7 +136,7 @@
 
                 if (successCountdown <= 0) {
                     clearSuccessTimer();
-                    window.location.href = "http://127.0.0.1:8000/";
+                    window.location.href = "{{ url('/') }}";
                 }
             }, 1000);
         }
@@ -154,7 +161,7 @@
         }
 
         function resetToWelcome() {
-            window.location.href = "http://127.0.0.1:8000/";
+            window.location.href = "{{ url('/') }}";
         }
 
         // Initialize timer on load

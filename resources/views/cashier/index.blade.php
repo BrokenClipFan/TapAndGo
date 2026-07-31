@@ -109,7 +109,13 @@
             padding: 1.5rem;
         }
 
-        /* Input Group */
+        /* Input Group Form */
+        .scanner-form {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+
         .scanner-input-group {
             position: relative;
             box-shadow: 0 4px 12px rgba(26, 67, 115, 0.08);
@@ -119,6 +125,7 @@
             background: #ffffff;
             border: 2px solid var(--theme-primary);
             margin-bottom: 1.5rem;
+            width: 100%;
         }
 
         .scanner-input {
@@ -139,6 +146,7 @@
             color: white;
             border: none;
             width: 4rem;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -151,7 +159,7 @@
             background-color: var(--theme-primary-hover);
         }
 
-        /* Items Grid - Responsive & Flexible */
+        /* Items Grid */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -282,8 +290,13 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
         }
 
         /* Mobile Breakpoint Adjustments */
@@ -291,13 +304,16 @@
             .pos-workspace {
                 padding: 0.75rem;
             }
+
             .terminal-body {
                 padding: 1rem;
             }
+
             .items-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 max-height: 300px;
             }
+
             .item-image-container {
                 height: 90px;
             }
@@ -313,7 +329,8 @@
             <span>TapAndGo Kiosk Payment Terminal</span>
         </a>
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <span style="background: white; color: var(--text-dark); padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.85rem;">
+            <span
+                style="background: white; color: var(--text-dark); padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.85rem;">
                 <i class="bi bi-shop text-primary"></i> Station #03
             </span>
             <div style="color: white; font-weight: 700; font-size: 0.9rem;">
@@ -327,9 +344,11 @@
             <div class="terminal-header">
                 <div>
                     <h5 style="font-weight: 800; color: var(--text-dark); margin: 0;">Scan Kiosk Order</h5>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Enter or scan customer receipt code</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Enter or scan customer receipt
+                        code</p>
                 </div>
-                <span style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.3rem 0.6rem; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700;">
+                <span
+                    style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.3rem 0.6rem; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700;">
                     <i class="bi bi-wifi"></i> Ready for Code
                 </span>
             </div>
@@ -340,29 +359,43 @@
                     <span style="display: flex; align-items: center; padding-left: 1.25rem; color: var(--text-muted);">
                         <i class="bi bi-qr-code-scan" style="color: var(--theme-primary); font-size: 1.5rem;"></i>
                     </span>
-                    <input type="text" class="scanner-input" placeholder="ENTER CODE (E.G. 558D-E49A)" id="kiosk-code-input" autofocus>
-                    <button class="scanner-btn" type="button" onclick="validateKioskCode()" title="Fetch Kiosk Order">
-                        <i class="bi bi-arrow-right-circle-fill" style="font-size: 1.5rem;"></i>
-                    </button>
+                    <form action="{{ route('cashier.order') }}" method="POST" class="scanner-form">
+                        @csrf
+                        <input type="text" name="code" class="scanner-input"
+                            placeholder="ENTER CODE (E.G. 558D-E49A)" id="kiosk-code-input" autofocus required>
+                        <button class="scanner-btn" type="submit" title="Fetch Kiosk Order">
+                            <i class="bi bi-arrow-right-circle-fill" style="font-size: 1.5rem;"></i>
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Empty State -->
                 <div id="empty-state" style="text-align: center; padding: 3rem 1rem;" class="text-muted">
-                    <i class="bi bi-receipt-cutoff" style="font-size: 3.5rem; color: var(--text-muted); display: block; margin-bottom: 0.75rem;"></i>
-                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Waiting for Customer Code</h6>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">Scan barcode or type the kiosk pass code above.</p>
+                    <i class="bi bi-receipt-cutoff"
+                        style="font-size: 3.5rem; color: var(--text-muted); display: block; margin-bottom: 0.75rem;"></i>
+                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Waiting for Customer
+                        Code</h6>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Scan barcode or type the kiosk pass code
+                        above.</p>
                 </div>
 
                 <!-- Active Loaded Order -->
                 <div id="loaded-order-panel" class="d-none">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.5rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.5rem;">
                         <div>
-                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order Number</span>
-                            <h4 style="font-weight: 800; color: var(--theme-primary); margin: 0;" id="display-order-id">#6</h4>
+                            <span
+                                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order
+                                Number</span>
+                            <h4 style="font-weight: 800; color: var(--theme-primary); margin: 0;" id="display-order-id">
+                                #6</h4>
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Pass Code</span>
-                            <div style="font-weight: 800; color: var(--theme-accent); font-size: 1.1rem;" id="display-pass-code">558D-E49A</div>
+                            <span
+                                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Pass
+                                Code</span>
+                            <div style="font-weight: 800; color: var(--theme-accent); font-size: 1.1rem;"
+                                id="display-pass-code">558D-E49A</div>
                         </div>
                     </div>
 
@@ -373,9 +406,10 @@
                     </div>
 
                     <!-- Total Due -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 2px solid var(--border-color); font-weight: 800; font-size: 1.2rem; color: var(--text-dark); margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 2px solid var(--border-color); font-weight: 800; font-size: 1.2rem; color: var(--text-dark); margin-bottom: 1rem;">
                         <span>Total Due:</span>
-                        <span style="color: var(--theme-primary);" id="display-order-total">₱1,885.00</span>
+                        <span style="color: var(--theme-primary);" id="display-order-total">₱0.00</span>
                     </div>
 
                     <!-- Actions -->
@@ -397,116 +431,89 @@
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <i class="bi bi-info-circle-fill" id="toast-icon" style="font-size: 1.25rem;"></i>
             <div>
-                <strong style="display: block; font-weight: 700; color: var(--text-dark); font-size: 0.9rem;" id="toast-title">Notification</strong>
+                <strong style="display: block; font-weight: 700; color: var(--text-dark); font-size: 0.9rem;"
+                    id="toast-title">Notification</strong>
                 <span style="font-size: 0.8rem;" id="toast-msg">Action processed.</span>
             </div>
         </div>
     </div>
 
     <script>
-        // Sample Mock Kiosk Order Data
-        const mockKioskDatabase = {
-            "558D-E49A": {
-                id: "6",
-                code: "558D-E49A",
-                items: [
-                    { 
-                        name: "Beef Coated with adobo sauce", 
-                        qty: 6, 
-                        price: 150.00, 
-                        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" 
-                    },
-                    { 
-                        name: "Royal", 
-                        qty: 3, 
-                        price: 25.00, 
-                        image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80" 
-                    },
-                    { 
-                        name: "Coca Cola", 
-                        qty: 4, 
-                        price: 25.00, 
-                        image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=400&q=80" 
-                    },
-                    { 
-                        name: "Matcha", 
-                        qty: 2, 
-                        price: 120.00, 
-                        image: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80" 
-                    }
-                ],
-                total: 1885.00
-            }
-        };
+        // Storage asset base path generated by Laravel
+        const storageAssetBase = "{{ asset('storage') }}";
+        const fallbackImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80";
 
         let currentActiveOrder = null;
 
-        function validateKioskCode() {
-            const inputField = document.getElementById('kiosk-code-input');
-            const code = inputField.value.trim().toUpperCase();
-
-            if (!code) {
-                showToast("Please enter or scan a kiosk code.", "warning");
-                return;
-            }
-
-            if (mockKioskDatabase[code]) {
-                currentActiveOrder = mockKioskDatabase[code];
-                loadOrderUI(currentActiveOrder);
-                showToast(`Pass Code ${code} verified successfully!`, "success");
-                inputField.value = '';
-            } else {
-                showToast(`Invalid Code "${code}". No order found or already processed.`, "error");
-            }
+        const orderData = @json($order ?? null);
+        if (orderData) {
+            loadOrderUI(orderData);
         }
 
         function loadOrderUI(order) {
+            currentActiveOrder = order;
+
             document.getElementById('empty-state').classList.add('d-none');
             document.getElementById('loaded-order-panel').classList.remove('d-none');
 
             document.getElementById('display-order-id').innerText = `#${order.id}`;
-            document.getElementById('display-pass-code').innerText = order.code;
-            document.getElementById('display-order-total').innerText = `₱${order.total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('display-pass-code').innerText = order.order_code || order.code || 'N/A';
+
+            const total = parseFloat(order.total_price || order.total || 0);
+            document.getElementById('display-order-total').innerText =
+                `₱${total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
             const itemsContainer = document.getElementById('kiosk-items-grid');
             itemsContainer.innerHTML = '';
 
-            order.items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.innerHTML = `
-                    <div class="item-image-container">
-                        <img src="${item.image}" alt="${item.name}" class="item-image">
-                    </div>
-                    <div class="item-content">
-                        <div>
-                            <div class="item-name">${item.name}</div>
-                            <div class="item-meta">Qty: ${item.qty}</div>
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    // Resolve image source URL correctly
+                    let imageSrc = fallbackImage;
+                    if (item.product && item.product.image_path) {
+                        imageSrc = `${storageAssetBase}/${item.product.image_path.replace(/^\/+/, '')}`;
+                    } else if (item.image) {
+                        imageSrc = item.image;
+                    }
+
+                    const itemName = item.name || (item.product ? item.product.name : 'Unknown Item');
+                    const qty = item.quantity || item.qty || 1;
+                    const price = parseFloat(item.price || (item.product ? item.product.price : 0));
+                    const itemTotal = price * qty;
+
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div class="item-image-container">
+                            <img src="${imageSrc}" alt="${itemName}" class="item-image" onerror="this.onerror=null;this.src='${fallbackImage}';">
                         </div>
-                        <div class="item-footer">
-                            <span class="item-price">₱${(item.price * item.qty).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                        <div class="item-content">
+                            <div>
+                                <div class="item-name">${itemName}</div>
+                                <div class="item-meta">Qty: ${qty}</div>
+                            </div>
+                            <div class="item-footer">
+                                <span class="item-price">₱${itemTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
-                itemsContainer.appendChild(card);
-            });
+                    `;
+                    itemsContainer.appendChild(card);
+                });
+            }
         }
 
         function cancelOrder() {
             if (!currentActiveOrder) return;
-            const codeToCancel = currentActiveOrder.code;
+            const codeToCancel = currentActiveOrder.order_code || currentActiveOrder.code || currentActiveOrder.id;
 
-            delete mockKioskDatabase[codeToCancel];
             resetTerminal();
-            showToast(`Order Code ${codeToCancel} was cancelled and voided.`, "error");
+            showToast(`Order #${codeToCancel} was cancelled and voided.`, "error");
         }
 
         function processPayment() {
             if (!currentActiveOrder) return;
             const completedId = currentActiveOrder.id;
-            const completedCode = currentActiveOrder.code;
 
-            delete mockKioskDatabase[completedCode];
             resetTerminal();
             showToast(`Payment accepted! Order #${completedId} completed.`, "success");
         }
@@ -517,10 +524,6 @@
             document.getElementById('loaded-order-panel').classList.add('d-none');
             document.getElementById('kiosk-code-input').focus();
         }
-
-        document.getElementById('kiosk-code-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') validateKioskCode();
-        });
 
         function showToast(message, type) {
             const banner = document.getElementById('toast-banner');
@@ -551,7 +554,9 @@
             }
 
             banner.style.display = 'block';
-            setTimeout(() => { banner.style.display = 'none'; }, 3500);
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 3500);
         }
     </script>
 

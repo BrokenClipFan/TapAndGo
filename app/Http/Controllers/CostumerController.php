@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Category;
 // use Illuminate\Support\Facades\Auth;
@@ -36,41 +37,85 @@ class CostumerController extends Controller
             'items.*.qty' => 'required|numeric|min:1',
         ]);
 
-        $code = $this->generateCode();
-        while(Order::where('order_code', $code)->exists()) {
-            $code = $this->generateCode();
-        }
-
         $grandTotal = 0;
         $items = [];
+        $unavailableItems = [];
 
-        foreach ($validated['items'] as $item) {
+        DB::beginTransaction();
 
-            $total = $item['price'] * $item['qty'];
-            $grandTotal += $total;
+        try{
+            $code = $this->generateCode();
+            while(Order::where('order_code', $code)->exists()) {
+                $code = $this->generateCode();
+            }
 
-            $items[] = [
-                'product_id' => $item['id'],
-                'name'       => $item['name'],
-                'quantity'   => $item['qty'],
-                'price'      => $item['price'],
-                'total'      => $total
-            ];
+            foreach ($validated['items'] as $item) {
+
+                $product = Product::findOrFail($item['id']);
+                if($product->status != 'available'){
+                    $unavailableItems[] = $item['name'];
+                    continue;
+                }
+
+                $remainingStock = $product->stock - $item['qty'];
+                if($remainingStock < 0) {
+                    $unavailableItems[] = $item['name'];
+                    continue;
+                }
+
+                $total = $item['price'] * $item['qty'];
+                $grandTotal += $total;
+                
+                $items[] = [
+                    'product_id' => $item['id'],
+                    'name'       => $item['name'],
+                    'quantity'   => $item['qty'],
+                    'price'      => $item['price'],
+                    'total'      => $total
+                ];
+
+            }
+
+            if (!empty($unavailableItems)) {
+                DB::rollBack();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Some items exceed available stock.',
+                    'unavailableItems' => $unavailableItems
+                ], 422);
+            }
+
+            DB::commit();
+
+            $product->update([
+                'stock' => $remainingStock
+            ]);
+
+            $order = Order::create([
+                'order_code'  => $code,
+                'total_price' => $grandTotal,
+            ]);
+
+            $order->items()->createMany($items);
+            
+
+            return response()->json([
+                'status' => 'success',
+                'success' => true,
+                'ticket_url' => route('ticket', $order->id)
+            ]);
+
+        }
+        catch(\Exception $e) {
+
+            DB::rollBack();
+            return back()
+            ->withErrors(['error' => $e->getMessage()])
+            ->withInput();
 
         }
 
-        $order = Order::create([
-            'order_code'  => $code,
-            'total_price' => $grandTotal,
-        ]);
-
-        $order->items()->createMany($items);
-
-        return response()->json([
-            'status' => 'success',
-            'success' => true,
-            'ticket_url' => route('ticket', $order->id)
-        ]);
     }
 
 }
