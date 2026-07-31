@@ -16,8 +16,16 @@ class CashierController extends Controller
 
         $order = Order::where('order_code', $validated['code'])->with('items.product')->first();
 
+        if($order == null) {
+            return redirect()->route('cashier')->with('error', 'Order Doesnt Exists');
+        }
+
+        if($order->status === 'paid') {
+            return redirect()->route('cashier')->with('success', 'This order is already checked out');
+        }
+
         if($order->created_at->isBefore(now()->subDay())) {
-            return view('cashier.index')->with('error', 'Order Expired');
+            return redirect()->route('cashier')->with('error', 'Order Expired');
         }
 
         $outOfStockItems = [];
