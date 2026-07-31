@@ -178,6 +178,31 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        /* Grayed out entire card state */
+        .item-card.zero-qty,
+        .item-card.outline-out-of-stock,
+        .item-card.outline-unavailable {
+            background: #f1f5f9;
+            opacity: 0.65;
+        }
+
+        /* Card Outlines for Status Issues */
+        .item-card.outline-out-of-stock {
+            border: 2px solid #dc2626;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .item-card.outline-unavailable {
+            border: 2px solid #dc2626;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .item-card.outline-invalid {
+            border: 2px solid #ea580c;
+            box-shadow: 0 0 8px rgba(234, 88, 12, 0.3);
         }
 
         .item-image-container {
@@ -185,6 +210,7 @@
             height: 120px;
             overflow: hidden;
             background-color: #f1f5f9;
+            position: relative;
         }
 
         .item-image {
@@ -268,6 +294,15 @@
             background-color: #dc2626;
         }
 
+        .btn-custom-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-custom-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
         .d-none {
             display: none !important;
         }
@@ -289,6 +324,97 @@
             max-width: 90vw;
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            background-color: var(--theme-primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.25rem 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        .badge-status {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .badge-danger {
+            background: #dc2626;
+        }
+
+        .badge-warning {
+            background: #ea580c;
+        }
+
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -296,6 +422,16 @@
 
             to {
                 transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
             }
         }
 
@@ -317,6 +453,10 @@
             .item-image-container {
                 height: 90px;
             }
+        }
+
+        .idInput {
+            display: none;
         }
     </style>
 </head>
@@ -414,17 +554,85 @@
 
                     <!-- Actions -->
                     <div class="action-buttons-group">
-                        <button class="btn-custom btn-custom-danger" onclick="cancelOrder()">
-                            <i class="bi bi-trash3-fill"></i> Cancel Order
-                        </button>
-                        <button class="btn-custom btn-custom-success" onclick="processPayment()">
-                            <i class="bi bi-cash-stack"></i> Accept Payment
-                        </button>
+                        <form action="{{ route('cashier.order.cancel') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <input type="number" name="id" class="idInput">
+                            <button type="submit" class="btn-custom btn-custom-danger">
+                                <i class="bi bi-trash3-fill"></i> Cancel Order
+                            </button>
+                        </form>
+                        <form action="{{ route('cashier.order.pay') }}" method="POST" id="payment-form">
+                            @csrf
+                            @method('PUT')
+                            <input type="number" name="id" class="idInput">
+                            <button type="button" onclick="openConfirmationModal()"
+                                class="btn-custom btn-custom-success">
+                                <i class="bi bi-cash-stack"></i> Accept Payment
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay d-none" id="confirmation-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h5 style="font-weight: 800; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-cart-check-fill" style="color: var(--theme-accent);"></i> Confirm Order Checkout
+                </h5>
+                <button type="button" onclick="closeConfirmationModal()"
+                    style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Included Items -->
+                <div>
+                    <h6
+                        style="font-weight: 800; color: var(--theme-success); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+                        <i class="bi bi-check-circle-fill"></i> Items to be Purchased
+                    </h6>
+                    <ul class="summary-list" id="modal-purchased-items">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Left Behind / Excluded Items -->
+                <div id="modal-excluded-section" class="d-none">
+                    <h6
+                        style="font-weight: 800; color: var(--theme-danger); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Items Left Behind / Excluded
+                    </h6>
+                    <ul class="summary-list" id="modal-excluded-items">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Total Summary -->
+                <div
+                    style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: var(--text-dark);">Final Total Due:</span>
+                    <span style="font-weight: 800; font-size: 1.2rem; color: var(--theme-primary);"
+                        id="modal-final-total">₱0.00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeConfirmationModal()" class="btn-custom btn-custom-secondary"
+                    style="flex: 0 0 auto; padding: 0.6rem 1rem;">
+                    Back / Edit
+                </button>
+                <button type="button" onclick="submitFinalPayment()" class="btn-custom btn-custom-success"
+                    style="flex: 1 1 auto; padding: 0.6rem 1rem;">
+                    <i class="bi bi-check2-circle"></i> Confirm & Pay
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Notification Toast -->
     <div class="custom-banner shadow" id="toast-banner">
@@ -442,13 +650,28 @@
         // Storage asset base path generated by Laravel
         const storageAssetBase = "{{ asset('storage') }}";
         const fallbackImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80";
+        const idInputs = document.querySelectorAll('.idInput');
 
         let currentActiveOrder = null;
+
+        // Arrays and stock mapping injected from Controller checks
+        const outOfStockItems = @json($outOfStockItems ?? []);
+        const unavailableItems = @json($unavailableItems ?? []);
+        const invalidItems = @json($invalidItems ?? []);
+        const itemStocks = @json($itemStocks ?? []);
 
         const orderData = @json($order ?? null);
         if (orderData) {
             loadOrderUI(orderData);
         }
+
+        // Show session errors/success messages on load
+        @if (session('success'))
+            showToast("{{ session('success') }}", "success");
+        @endif
+        @if (session('error'))
+            showToast("{{ session('error') }}", "error");
+        @endif
 
         function loadOrderUI(order) {
             currentActiveOrder = order;
@@ -459,16 +682,20 @@
             document.getElementById('display-order-id').innerText = `#${order.id}`;
             document.getElementById('display-pass-code').innerText = order.order_code || order.code || 'N/A';
 
-            const total = parseFloat(order.total_price || order.total || 0);
-            document.getElementById('display-order-total').innerText =
-                `₱${total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            idInputs[0].value = order.id;
+            idInputs[1].value = order.id;
 
+            renderItems(order.items);
+        }
+
+        function renderItems(items) {
             const itemsContainer = document.getElementById('kiosk-items-grid');
             itemsContainer.innerHTML = '';
 
-            if (order.items && order.items.length > 0) {
-                order.items.forEach(item => {
-                    // Resolve image source URL correctly
+            let calculatedTotal = 0;
+
+            if (items && items.length > 0) {
+                items.forEach(item => {
                     let imageSrc = fallbackImage;
                     if (item.product && item.product.image_path) {
                         imageSrc = `${storageAssetBase}/${item.product.image_path.replace(/^\/+/, '')}`;
@@ -477,20 +704,73 @@
                     }
 
                     const itemName = item.name || (item.product ? item.product.name : 'Unknown Item');
-                    const qty = item.quantity || item.qty || 1;
+                    const qty = item.quantity !== undefined ? item.quantity : (item.qty || 1);
                     const price = parseFloat(item.price || (item.product ? item.product.price : 0));
                     const itemTotal = price * qty;
 
+                    const maxStock = itemStocks[item.id] !== undefined ? parseInt(itemStocks[item.id]) : (item
+                        .product ? parseInt(item.product.stock) : 9999);
+
+                    // Determine Outline Class, Badges, and Disabled State for Action Buttons
+                    let cardOutlineClass = '';
+                    let badgeHtml = '';
+                    let isButtonDisabled = false;
+                    let isProblematic = false;
+
+                    // Dynamically check if quantity has been lowered back within stock limits
+                    let isCurrentlyInvalid = invalidItems.includes(item.id);
+                    if (isCurrentlyInvalid && qty <= maxStock) {
+                        isCurrentlyInvalid = false;
+                    }
+
+                    if (outOfStockItems.includes(item.id)) {
+                        cardOutlineClass = 'outline-out-of-stock';
+                        isButtonDisabled = true;
+                        isProblematic = true;
+                        badgeHtml =
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #dc2626; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">OUT OF STOCK</span></div>';
+                    } else if (unavailableItems.includes(item.id)) {
+                        cardOutlineClass = 'outline-unavailable';
+                        isButtonDisabled = true;
+                        isProblematic = true;
+                        badgeHtml =
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #dc2626; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">UNAVAILABLE</span></div>';
+                    } else if (isCurrentlyInvalid) {
+                        cardOutlineClass = 'outline-invalid';
+                        isProblematic = true;
+                        badgeHtml =
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #ea580c; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">INVALID QTY</span></div>';
+                    }
+
+                    if (qty > 0 && !isProblematic) {
+                        calculatedTotal += itemTotal;
+                    }
+
+                    const minusDisabledAttr = (isButtonDisabled || qty <= 0) ?
+                        'disabled style="background: #e2e8f0; color: #94a3b8; cursor: not-allowed; border: none; padding: 0.25rem 0.6rem;"' :
+                        'style="background: #f1f5f9; border: none; padding: 0.25rem 0.6rem; cursor: pointer;"';
+                    const plusDisabledAttr = (isButtonDisabled || qty >= maxStock) ?
+                        'disabled style="background: #e2e8f0; color: #94a3b8; cursor: not-allowed; border: none; padding: 0.25rem 0.6rem;"' :
+                        'style="background: #f1f5f9; border: none; padding: 0.25rem 0.6rem; cursor: pointer;"';
+
                     const card = document.createElement('div');
-                    card.className = 'item-card';
+                    card.className = `item-card ${qty === 0 ? 'zero-qty' : ''} ${cardOutlineClass}`;
                     card.innerHTML = `
                         <div class="item-image-container">
                             <img src="${imageSrc}" alt="${itemName}" class="item-image" onerror="this.onerror=null;this.src='${fallbackImage}';">
+                            ${badgeHtml}
                         </div>
                         <div class="item-content">
                             <div>
                                 <div class="item-name">${itemName}</div>
-                                <div class="item-meta">Qty: ${qty}</div>
+                                <div class="item-meta">₱${price.toFixed(2)} each (Stock: ${maxStock})</div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin: 0.5rem 0;">
+                                <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 4px; overflow:hidden; background: #fff;">
+                                    <button type="button" onclick="updateQuantity(${item.id}, -1)" ${minusDisabledAttr}><i class="bi bi-dash"></i></button>
+                                    <span style="padding: 0 0.6rem; font-weight: 700; font-size: 0.85rem;">${qty}</span>
+                                    <button type="button" onclick="updateQuantity(${item.id}, 1)" ${plusDisabledAttr}><i class="bi bi-plus"></i></button>
+                                </div>
                             </div>
                             <div class="item-footer">
                                 <span class="item-price">₱${itemTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
@@ -500,22 +780,140 @@
                     itemsContainer.appendChild(card);
                 });
             }
+
+            document.getElementById('display-order-total').innerText =
+                `₱${calculatedTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         }
 
-        function cancelOrder() {
-            if (!currentActiveOrder) return;
-            const codeToCancel = currentActiveOrder.order_code || currentActiveOrder.code || currentActiveOrder.id;
+        function updateQuantity(itemId, change) {
+            if (!currentActiveOrder || !currentActiveOrder.items) return;
 
-            resetTerminal();
-            showToast(`Order #${codeToCancel} was cancelled and voided.`, "error");
+            currentActiveOrder.items = currentActiveOrder.items.map(item => {
+                if (item.id === itemId) {
+                    let currentQty = item.quantity !== undefined ? item.quantity : (item.qty || 1);
+                    let maxStock = itemStocks[item.id] !== undefined ? parseInt(itemStocks[item.id]) : 9999;
+                    let newQty = currentQty + change;
+
+                    if (newQty < 0) newQty = 0;
+                    if (change > 0 && newQty > maxStock) newQty = maxStock;
+
+                    item.quantity = newQty;
+                    item.qty = newQty;
+                }
+                return item;
+            });
+
+            renderItems(currentActiveOrder.items);
         }
 
-        function processPayment() {
-            if (!currentActiveOrder) return;
-            const completedId = currentActiveOrder.id;
+        // Modal triggers and rendering logic
+        function openConfirmationModal() {
+            if (!currentActiveOrder || !currentActiveOrder.items) return;
 
-            resetTerminal();
-            showToast(`Payment accepted! Order #${completedId} completed.`, "success");
+            const purchasedContainer = document.getElementById('modal-purchased-items');
+            const excludedContainer = document.getElementById('modal-excluded-items');
+            const excludedSection = document.getElementById('modal-excluded-section');
+
+            purchasedContainer.innerHTML = '';
+            excludedContainer.innerHTML = '';
+
+            let grandTotal = 0;
+            let excludedCount = 0;
+
+            currentActiveOrder.items.forEach(item => {
+                const itemName = item.name || (item.product ? item.product.name : 'Unknown Item');
+                const qty = item.quantity !== undefined ? item.quantity : (item.qty || 1);
+                const price = parseFloat(item.price || (item.product ? item.product.price : 0));
+                const itemTotal = price * qty;
+                const maxStock = itemStocks[item.id] !== undefined ? parseInt(itemStocks[item.id]) : 9999;
+
+                let isCurrentlyInvalid = invalidItems.includes(item.id) && qty > maxStock;
+                let isOutOfStock = outOfStockItems.includes(item.id);
+                let isUnavailable = unavailableItems.includes(item.id);
+
+                if (isOutOfStock || isUnavailable || isCurrentlyInvalid || qty === 0) {
+                    excludedCount++;
+                    let reasonBadge = '';
+                    if (isOutOfStock) reasonBadge = '<span class="badge-status badge-danger">Out of Stock</span>';
+                    else if (isUnavailable) reasonBadge =
+                        '<span class="badge-status badge-danger">Unavailable</span>';
+                    else if (isCurrentlyInvalid) reasonBadge =
+                        '<span class="badge-status badge-warning">Invalid Qty</span>';
+                    else if (qty === 0) reasonBadge = '<span class="badge-status badge-warning">Qty Zero</span>';
+
+                    excludedContainer.innerHTML += `
+                        <li class="summary-item">
+                            <div>
+                                <strong>${itemName}</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Qty: ${qty}</div>
+                            </div>
+                            ${reasonBadge}
+                        </li>
+                    `;
+                } else {
+                    grandTotal += itemTotal;
+                    purchasedContainer.innerHTML += `
+                        <li class="summary-item">
+                            <div>
+                                <strong>${itemName}</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">${qty} x ₱${price.toFixed(2)}</div>
+                            </div>
+                            <strong style="color: var(--theme-primary);">₱${itemTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+                        </li>
+                    `;
+                }
+            });
+
+            if (purchasedContainer.children.length === 0) {
+                purchasedContainer.innerHTML =
+                    '<li class="summary-item" style="color: var(--text-muted);">No valid items available for purchase.</li>';
+            }
+
+            if (excludedCount > 0) {
+                excludedSection.classList.remove('d-none');
+            } else {
+                excludedSection.classList.add('d-none');
+            }
+
+            document.getElementById('modal-final-total').innerText =
+                `₱${grandTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('confirmation-modal').classList.remove('d-none');
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmation-modal').classList.add('d-none');
+        }
+
+        function submitFinalPayment() {
+            const form = document.getElementById('payment-form');
+            form.querySelectorAll('.dynamic-item-input').forEach(el => el.remove());
+
+            if (currentActiveOrder && currentActiveOrder.items) {
+                currentActiveOrder.items.forEach((item, index) => {
+                    let inputId = document.createElement('input');
+                    inputId.type = 'hidden';
+                    inputId.className = 'dynamic-item-input';
+                    inputId.name = `items[${index}][id]`;
+                    inputId.value = item.id;
+                    form.appendChild(inputId);
+
+                    let inputProductId = document.createElement('input');
+                    inputProductId.type = 'hidden';
+                    inputProductId.className = 'dynamic-item-input';
+                    inputProductId.name = `items[${index}][product_id]`;
+                    inputProductId.value = item.product_id || (item.product ? item.product.id : '');
+                    form.appendChild(inputProductId);
+
+                    let inputQty = document.createElement('input');
+                    inputQty.type = 'hidden';
+                    inputQty.className = 'dynamic-item-input';
+                    inputQty.name = `items[${index}][quantity]`;
+                    inputQty.value = item.quantity !== undefined ? item.quantity : (item.qty || 1);
+                    form.appendChild(inputQty);
+                });
+            }
+
+            form.submit();
         }
 
         function resetTerminal() {
@@ -543,7 +941,7 @@
                 banner.style.backgroundColor = "#fef2f2";
                 banner.style.borderColor = "#fca5a5";
                 banner.style.color = "#7f1d1d";
-                toastTitle.innerText = "Order Cancelled / Error";
+                toastTitle.innerText = "Error / Action Failed";
                 toastIcon.className = "bi bi-x-circle-fill";
             } else {
                 banner.style.backgroundColor = "#dcfce7";

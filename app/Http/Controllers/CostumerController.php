@@ -31,7 +31,7 @@ class CostumerController extends Controller
         $validated = $request->validate([
             'order_type' => 'required|string|max:255',
             'items' => 'required|array|min:1',
-            'items.*.id' => 'required|integer|exists:products,id',
+            'items.*.id' => 'required|integer',
             'items.*.name' => 'required|string|max:255',
             'items.*.price' => 'required|numeric',
             'items.*.qty' => 'required|numeric|min:1',
@@ -94,7 +94,6 @@ class CostumerController extends Controller
             ]);
 
             $order->items()->createMany($items);
-            
 
             return response()->json([
                 'status' => 'success',

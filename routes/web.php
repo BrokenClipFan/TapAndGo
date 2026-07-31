@@ -20,9 +20,11 @@ Route::get('/ticket/{order}', TicketController::class)->name('ticket');
 
 Route::get('/cashier', function () {
         return view('cashier.index');
-});
+})->name('cashier');
 
 Route::post('/cashier/order', [CashierController::class, 'view'])->name('cashier.order');
+Route::put('/cashier/order/pay', [CashierController::class, 'paidOrder'])->name('cashier.order.pay');
+Route::delete('/cashier/order/cancel', [CashierController::class, 'cancelledOrder'])->name('cashier.order.cancel');
 
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
