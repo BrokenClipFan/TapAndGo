@@ -451,7 +451,8 @@
                                         }
                                     @endphp
                                     <tr data-id="{{ $product->id }}" data-qty="{{ $product->stock }}"
-                                        data-price="{{ $product->price }}" data-status="{{ $status }}">
+                                        data-price="{{ $product->price }}" data-status="{{ $status }}"
+                                        data-category="{{ $product->category->id }}">
                                         <td class="ps-3">
                                             <strong class="text-brand-navy item-name">{{ $product->name }}</strong>
                                         </td>
@@ -757,7 +758,8 @@
                             <label class="form-label fw-semibold">Category</label>
                             <select class="form-select" name="category_id" id="editItemCategory" required>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option class="editCatProducts" value="{{ $category->id }}">
+                                        {{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -960,6 +962,15 @@
                         const editForm = document.getElementById('editItemForm');
                         editForm.action = `/admin/product/update/${productId}`;
 
+                        const editCatProducts = document.querySelectorAll('.editCatProducts');
+
+                        editCatProducts.forEach(element => {
+                            if (element.value == activeTargetRow.dataset
+                                .category) {
+                                element.selected = true;
+                            }
+                        });
+
                         document.getElementById('editItemId').value = productId || '';
                         document.getElementById('editItemName').value = activeTargetRow.querySelector(
                             '.item-name').textContent.trim();
@@ -1000,7 +1011,7 @@
                             row.style.display = '';
                         } else if (value === 'low') {
                             row.style.display = (status === 'low' || status === 'out') ? '' :
-                            'none';
+                                'none';
                         }
                     });
                 });

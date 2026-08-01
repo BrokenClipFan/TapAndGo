@@ -73,7 +73,8 @@ class CashierController extends Controller
             $order = Order::findOrFail($request->id);
 
             $order->items()->delete();
-
+            
+            $excludedItems = [];
             $items = [];
             
             foreach($validated['items'] as $item){
@@ -81,12 +82,22 @@ class CashierController extends Controller
                 $product = Product::findOrFail($item['product_id']);
 
                 if($product->status !== 'available') {
+                    $excludedItems[] = [
+                        'name' => $product->name,
+                        'qty' => $item['quantity'],
+                        'reason' => "Unavailable"
+                    ];
                     continue;
                 }
 
                 $remainingStock = $product->stock - $item['quantity'];
                 
                 if($remainingStock < 0) {
+                    $excludedItems[] = [
+                        'name' => $product->name,
+                        'qty' => $item['quantity'],
+                        'reason' => "Only {$product->stock} left in stock."
+                    ];  
                     continue;
                 }
 
@@ -96,8 +107,8 @@ class CashierController extends Controller
 
                 $items[] = [
                     'order_id' => $order->id,
-                    'product_id' => $product->id,
                     'name' => $product->name,
+                    'product_id' => $product->id,
                     'quantity' => $item['product_id'],
                     'price' => $product->price,
                     'total' => $item['quantity'] * $product->price,
@@ -116,6 +127,8 @@ class CashierController extends Controller
             $order->items()->createMany($items);
             
             DB::commit();
+
+            return view('cashier.receipt', compact('order', 'items', 'excludedItems'))->with('success', 'Checkout Successfull');
 
         } catch(\Exception $e) {
             DB::rollBack();

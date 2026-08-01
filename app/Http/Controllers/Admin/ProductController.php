@@ -39,6 +39,14 @@ class ProductController extends Controller
         $imagePath = $product->image_path;
         $validated['stock'] = $request->quantity;
 
+        if($validated['stock'] > 0 && $product->status == 'out of stock' && $product->status != 'unavailable') {
+            $validated['status'] = 'available';
+        }
+
+        if($validated['stock'] == 0 && $product->status != 'unavailable') {
+            $validated['status'] = 'out of stock';
+        }
+
         if($request->hasFile('image')) {
             if($imagePath && Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
