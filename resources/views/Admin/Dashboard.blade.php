@@ -12,7 +12,7 @@
 
     <style>
         :root {
-            --brand-navy: #0f1d36;
+            --brand-navy: #1a4373;
             --brand-navy-light: #182a4a;
             --brand-orange: #ff6b00;
             --brand-orange-hover: #e05e00;
@@ -120,14 +120,8 @@
         <div class="container-fluid p-0">
             <!-- Brand Logo -->
             <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#">
-                <span class="bg-brand-orange rounded-3 px-2 py-1 fs-5">
-                    <i class="bi bi-lightning-charge-fill"></i>
-                </span>
-                <div>
-                    <div class="lh-1 fs-5">TapAndGo</div>
-                    <small class="text-uppercase text-white-50 fs-8 fw-normal" style="letter-spacing: 1px;">Admin
-                        Console</small>
-                </div>
+                <img src="{{ asset('Logo.png') }}" alt="TapAndGo Logo" height="40"
+                    class="d-inline-block align-text-top">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
@@ -140,14 +134,6 @@
                     <li class="nav-item">
                         <button class="nav-link active px-3 rounded-2" data-target="view-overview"><i
                                 class="bi bi-grid-1x2-fill me-1"></i> Overview</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link px-3 rounded-2" data-target="view-analytics"><i
-                                class="bi bi-bar-chart-line-fill me-1"></i> Analytics</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link px-3 rounded-2" data-target="view-inventory"><i
-                                class="bi bi-boxes me-1"></i> Inventory & Stocks</button>
                     </li>
                 </ul>
 
@@ -172,8 +158,8 @@
     <div class="container-fluid flex-grow-1 overflow-hidden p-3">
         <div class="row h-100 g-3">
 
-            <!-- LEFT MAIN COLUMN -->
-            <div class="col-lg-8 col-xl-9 h-100 d-flex flex-column gap-3 overflow-auto custom-scroll pe-2">
+            <!-- MAIN FULL WIDTH CONTENT COLUMN -->
+            <div class="col-12 h-100 d-flex flex-column gap-3 overflow-auto custom-scroll pe-2">
 
                 <!-- Section 1: KPI Statistics Summary Cards -->
                 <div class="row g-3 flex-shrink-0" id="view-overview">
@@ -416,7 +402,8 @@
                         <table class="table table-hover align-middle mb-0" id="inventoryTable">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" class="ps-3">Item Name</th>
+                                    <th scope="col" class="ps-3" style="width: 70px;">Image</th>
+                                    <th scope="col">Item Name</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Stock Status</th>
@@ -453,8 +440,23 @@
                                     <tr data-id="{{ $product->id }}" data-qty="{{ $product->stock }}"
                                         data-price="{{ $product->price }}" data-status="{{ $status }}"
                                         data-category="{{ $product->category->id }}">
+
+                                        <!-- PRODUCT IMAGE COLUMN -->
                                         <td class="ps-3">
-                                            <strong class="text-brand-navy item-name">{{ $product->name }}</strong>
+                                            @if ($product->image_path)
+                                                <img src="{{ Storage::url($product->image_path) }}"
+                                                    alt="{{ $product->name }}" class="rounded-2 border"
+                                                    style="width: 45px; height: 45px; max-width: 45px; max-height: 45px; object-fit: cover;">
+                                            @else
+                                                <div class="bg-light text-secondary rounded-2 border d-flex align-items-center justify-content-center"
+                                                    style="width: 45px; height: 45px; max-width: 45px; max-height: 45px;">
+                                                    <i class="bi bi-box-seam fs-5"></i>
+                                                </div>
+                                            @endif
+                                        </td>
+
+                                        <td class="fw-bold text-brand-navy item-name">
+                                            {{ $product->name }}
                                         </td>
                                         <td><span
                                                 class="badge bg-light text-dark border category-badge">{{ $product->category->name }}</span>
@@ -482,86 +484,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- RIGHT SIDEBAR COLUMN: Terminals & Recent Transactions -->
-            <div class="col-lg-4 col-xl-3 h-100 d-flex flex-column gap-3">
-                <div class="card border-0 shadow-sm rounded-3 flex-shrink-0">
-                    <div
-                        class="card-header bg-brand-navy text-white p-3 d-flex justify-content-between align-items-center">
-                        <h6 class="fw-bold mb-0"><i class="bi bi-display me-2 text-brand-orange"></i>Kiosk Terminals
-                        </h6>
-                        <span class="badge bg-success">Live</span>
-                    </div>
-                    <div class="card-body p-3 bg-white">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <strong class="text-brand-navy">Station #K-01</strong>
-                                <br><small class="text-muted">Express Main Counter</small>
-                            </div>
-                            <span class="badge bg-success-subtle text-success border border-success">Online</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <strong class="text-brand-navy">Station #K-02</strong>
-                                <br><small class="text-muted">Dine In Terminal A</small>
-                            </div>
-                            <span class="badge bg-success-subtle text-success border border-success">Online</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <strong class="text-brand-navy">Station #K-03</strong>
-                                <br><small class="text-muted">Dine In Terminal B</small>
-                            </div>
-                            <span class="badge bg-success-subtle text-success border border-success">Online</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <strong class="text-brand-navy">Station #K-04</strong>
-                                <br><small class="text-muted">Take Out Drive-thru</small>
-                            </div>
-                            <span class="badge bg-success-subtle text-success border border-success">Online</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Transactions Activity Log -->
-                <div class="card border-0 shadow-sm rounded-3 flex-grow-1 d-flex flex-column overflow-hidden">
-                    <div
-                        class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-                        <h6 class="fw-bold text-brand-navy mb-0"><i
-                                class="bi bi-receipt me-2 text-brand-orange"></i>Recent Transactions</h6>
-                        <a href="#" class="small text-decoration-none text-brand-orange fw-semibold">View
-                            All</a>
-                    </div>
-                    <div class="card-body p-2 overflow-auto custom-scroll flex-grow-1 bg-light">
-                        <div class="card border-0 shadow-sm mb-2">
-                            <div class="card-body p-2">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong class="text-brand-navy small">#TG-94820</strong>
-                                    <span class="fw-bold text-brand-navy">$45.10</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center small text-muted">
-                                    <span>Code: <strong class="text-brand-orange">837-D0C</strong></span>
-                                    <span class="badge bg-success">Paid</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card border-0 shadow-sm mb-2">
-                            <div class="card-body p-2">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong class="text-brand-navy small">#TG-94821</strong>
-                                    <span class="fw-bold text-brand-navy">$17.05</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center small text-muted">
-                                    <span>Code: <strong class="text-brand-orange">201-F2B</strong></span>
-                                    <span class="badge bg-warning text-dark">Awaiting Payment</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -729,6 +651,47 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Add
                             Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESTOCK PRODUCT MODAL -->
+    <div class="modal fade" id="restockItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-brand-navy text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2 text-brand-orange"></i>Restock
+                        Product</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form id="restockItemForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="restockItemId" name="id">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Item Name</label>
+                            <input type="text" class="form-control bg-light" id="restockItemName" readonly>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-semibold">Current Stock</label>
+                                <input type="text" class="form-control bg-light" id="restockCurrentQty" readonly>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-semibold">Quantity to Add</label>
+                                <input type="number" name="quantity" class="form-control" id="restockAddQty"
+                                    min="1" value="50" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Add
+                            Stock</button>
                     </div>
                 </form>
             </div>
@@ -942,17 +905,22 @@
                     const deleteBtn = e.target.closest('.btn-delete-item');
 
                     if (restockBtn) {
-                        const row = restockBtn.closest('tr');
-                        const itemName = row.querySelector('.item-name').textContent;
-                        const currentQty = parseInt(row.dataset.qty) || 0;
+                        activeTargetRow = restockBtn.closest('tr');
+                        const productId = activeTargetRow.dataset.id;
+                        const itemName = activeTargetRow.querySelector('.item-name').textContent.trim();
+                        const currentQty = parseInt(activeTargetRow.dataset.qty) || 0;
 
-                        const addQty = prompt(
-                            `Restock "${itemName}"\nCurrent quantity: ${currentQty}\nEnter amount to add:`,
-                            "50");
-                        if (addQty !== null && !isNaN(addQty) && parseInt(addQty) > 0) {
-                            const newTotal = currentQty + parseInt(addQty);
-                            updateRowStockState(row, newTotal);
-                        }
+                        const restockForm = document.getElementById('restockItemForm');
+                        restockForm.action = `/admin/product/restock/${productId}`;
+
+                        document.getElementById('restockItemId').value = productId || '';
+                        document.getElementById('restockItemName').value = itemName;
+                        document.getElementById('restockCurrentQty').value = `${currentQty} pcs`;
+                        document.getElementById('restockAddQty').value = 50;
+
+                        const restockModal = new bootstrap.Modal(document.getElementById(
+                            'restockItemModal'));
+                        restockModal.show();
                     }
 
                     if (editBtn) {
@@ -965,8 +933,7 @@
                         const editCatProducts = document.querySelectorAll('.editCatProducts');
 
                         editCatProducts.forEach(element => {
-                            if (element.value == activeTargetRow.dataset
-                                .category) {
+                            if (element.value == activeTargetRow.dataset.category) {
                                 element.selected = true;
                             }
                         });
@@ -1011,7 +978,7 @@
                             row.style.display = '';
                         } else if (value === 'low') {
                             row.style.display = (status === 'low' || status === 'out') ? '' :
-                                'none';
+                            'none';
                         }
                     });
                 });

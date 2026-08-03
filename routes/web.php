@@ -27,6 +27,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::post('/admin/product/store', [ProductController::class, 'store'])->name('admin.product.store');
     Route::put('/admin/product/update/{product}', [ProductController::class, 'update'])->name('admin.product.update');
     Route::delete('/admin/product/delete/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
+    Route::put('/admin/product/restock/{product}', [ProductController::class, 'restock'])->name('admin.product.restock');
 });
 
 

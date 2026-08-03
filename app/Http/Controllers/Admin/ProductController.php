@@ -59,7 +59,7 @@ class ProductController extends Controller
 
         $product->update($dataToUpdate);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Product has been updated successfully');
+        return back()->with('success', 'Product has been updated successfully');
     }
 
     public function destroy(Product $product) {
@@ -69,6 +69,17 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'The product has been deleted successfully');
+        return back()->with('success', 'The product has been deleted successfully');
+    }
+
+    public function restock(Request $request, Product $product) {
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $product->stock = $product->stock + $request->quantity;
+        $product->save();
+
+        return back()->with('success', $product->name . " has been restocked!");
     }
 }
