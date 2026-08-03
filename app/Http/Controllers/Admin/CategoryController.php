@@ -67,4 +67,5 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.dashboard')->with('success', 'Category Successfully Deleted');
     }
+
 }

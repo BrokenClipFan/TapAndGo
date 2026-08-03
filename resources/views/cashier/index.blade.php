@@ -46,7 +46,7 @@
         .pos-header {
             background-color: var(--theme-primary);
             color: #ffffff;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -57,18 +57,25 @@
         }
 
         .pos-brand {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: #ffffff;
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
+            gap: 0.75rem;
+            text-decoration: none;
         }
 
-        .pos-brand i {
-            color: var(--theme-accent);
+        .pos-brand-logo {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .pos-brand-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #ffffff;
+            opacity: 0.9;
+            border-left: 1px solid rgba(255, 255, 255, 0.25);
+            padding-left: 0.75rem;
         }
 
         /* Responsive Main Container */
@@ -453,6 +460,10 @@
             .item-image-container {
                 height: 90px;
             }
+
+            .pos-brand-title {
+                display: none;
+            }
         }
 
         .idInput {
@@ -465,8 +476,8 @@
 
     <header class="pos-header">
         <a class="pos-brand" href="#">
-            <i class="bi bi-lightning-fill"></i>
-            <span>TapAndGo Kiosk Payment Terminal</span>
+            <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="pos-brand-logo">
+            <span class="pos-brand-title">Kiosk Payment Terminal</span>
         </a>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <span

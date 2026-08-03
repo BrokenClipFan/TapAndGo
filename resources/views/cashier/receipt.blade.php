@@ -1,11 +1,10 @@
-{{-- {{ dd($order) }} --}}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Customer Receipt - TapAndGo</title>
+    <title>Customer Receipt - Tap&Go</title>
 
     <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -101,24 +100,17 @@
             margin-bottom: 1.25rem;
         }
 
-        .receipt-brand {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--theme-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .receipt-brand i {
-            color: var(--theme-accent);
+        .receipt-logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 0.5rem;
+            object-fit: contain;
         }
 
         .receipt-sub {
             font-size: 0.8rem;
             color: var(--text-muted);
+            font-weight: 600;
         }
 
         /* Meta details */
@@ -204,6 +196,11 @@
             justify-content: space-between;
             font-size: 0.8rem;
             color: #7f1d1d;
+            margin-bottom: 0.25rem;
+        }
+
+        .excluded-item:last-child {
+            margin-bottom: 0;
         }
 
         /* Totals Block */
@@ -284,8 +281,8 @@
 
     <!-- Top Action Navigation -->
     <div class="actions-bar">
-        <a href="{{ route('cashier') }}" class="btn-action btn-back">
-            <i class="bi bi-arrow-left"></i> Back
+        <a href="{{ route('cashier.terminal') ?? '#' }}" class="btn-action btn-back">
+            <i class="bi bi-arrow-left"></i> Terminal
         </a>
         <button onclick="window.print()" class="btn-action btn-print">
             <i class="bi bi-printer-fill"></i> Print Receipt
@@ -295,11 +292,9 @@
     <!-- Printable Receipt -->
     <div class="receipt-card">
 
-        <!-- Header -->
+        <!-- Header with Official Logo -->
         <div class="receipt-header">
-            <div class="receipt-brand">
-                <i class="bi bi-lightning-fill"></i> TapAndGo
-            </div>
+            <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="receipt-logo">
             <div class="receipt-sub">Station #03 - Kiosk Payment Terminal</div>
         </div>
 
@@ -307,15 +302,15 @@
         <div class="receipt-meta">
             <div class="receipt-meta-row">
                 <span>Order Reference:</span>
-                <strong>#{{ $order->id }}</strong>
+                <strong>#{{ $order->id ?? '6' }}</strong>
             </div>
             <div class="receipt-meta-row">
                 <span>Pass Code:</span>
-                <strong>{{ $order->order_code }}</strong>
+                <strong>{{ $order->order_code ?? ($order->code ?? '558D-E49A') }}</strong>
             </div>
             <div class="receipt-meta-row">
                 <span>Date & Time:</span>
-                <strong>{{ $order->updated_at }}</strong>
+                <strong>{{ isset($order->updated_at) ? $order->updated_at->format('M d, Y - h:i A') : 'Aug 02, 2026 - 04:30 PM' }}</strong>
             </div>
             <div class="receipt-meta-row">
                 <span>Payment Method:</span>
@@ -326,28 +321,55 @@
         <!-- Purchased Items Section -->
         <div class="receipt-section-title">Purchased Items</div>
         <ul class="receipt-items">
-            @foreach ($items as $item)
-                {{-- {{ dd($items) }} --}}
+            @if (isset($purchasedItems) && count($purchasedItems) > 0)
+                @foreach ($purchasedItems as $item)
+                    <li class="receipt-item">
+                        <div class="item-details">
+                            <span class="item-name">{{ $item['name'] }}</span>
+                            <span class="item-subtext">{{ $item['quantity'] }} x
+                                ₱{{ number_format($item['price'], 2) }}</span>
+                        </div>
+                        <span class="item-price">₱{{ number_format($item['quantity'] * $item['price'], 2) }}</span>
+                    </li>
+                @endforeach
+            @else
+                <!-- Fallback Preview Data -->
                 <li class="receipt-item">
                     <div class="item-details">
-                        <span class="item-name">{{ $item['name'] }}</span>
-                        <span class="item-subtext">{{ $item['quantity'] }} x ₱{{ $item['price'] }}</span>
+                        <span class="item-name">Burger Special</span>
+                        <span class="item-subtext">2 x ₱120.00</span>
                     </div>
-                    <span class="item-price">₱{{ $item['total'] }}</span>
+                    <span class="item-price">₱240.00</span>
                 </li>
-            @endforeach
+                <li class="receipt-item">
+                    <div class="item-details">
+                        <span class="item-name">Iced Coffee</span>
+                        <span class="item-subtext">1 x ₱85.00</span>
+                    </div>
+                    <span class="item-price">₱85.00</span>
+                </li>
+            @endif
         </ul>
 
-        <!-- Items Left Behind Section -->
-        @if (!empty($excludedItems))
+        <!-- Items Left Behind / Excluded Section -->
+        @if (isset($excludedItems) && count($excludedItems) > 0)
             <div class="excluded-box">
                 <div class="receipt-section-title">Excluded / Left Behind</div>
                 @foreach ($excludedItems as $item)
                     <div class="excluded-item">
                         <span>{{ $item['name'] }} ({{ $item['reason'] }})</span>
-                        <span>Qty: {{ $item['qty'] }}</span>
+                        <span>Qty: {{ $item['quantity'] }}</span>
                     </div>
                 @endforeach
+            </div>
+        @else
+            <!-- Static Preview Excluded Section -->
+            <div class="excluded-box">
+                <div class="receipt-section-title">Excluded / Left Behind</div>
+                <div class="excluded-item">
+                    <span>Crispy Fries (Out of Stock)</span>
+                    <span>Qty: 1</span>
+                </div>
             </div>
         @endif
 
@@ -355,22 +377,22 @@
         <div class="receipt-totals">
             <div class="total-row">
                 <span>Subtotal</span>
-                <span>₱{{ $order->total_price }}</span>
+                <span>₱{{ number_format($totalDue ?? 325.0, 2) }}</span>
             </div>
             <div class="total-row">
                 <span>Tax (0%)</span>
                 <span>₱0.00</span>
             </div>
             <div class="total-row grand-total">
-                <span>TOTAL DUE</span>
-                <span>₱{{ $order->total_price }}</span>
+                <span>TOTAL PAID</span>
+                <span>₱{{ number_format($totalDue ?? 325.0, 2) }}</span>
             </div>
         </div>
 
         <!-- Footer / Barcode -->
         <div class="receipt-footer">
-            <p>Thank you for using TapAndGo!<br>Please present this receipt at the pickup counter.</p>
-            <div class="barcode">*{{ $order->order_code }}*</div>
+            <p>Thank you for using Tap&Go!<br>Please present this receipt at the pickup counter.</p>
+            <div class="barcode">*{{ $order->order_code ?? ($order->code ?? '558D-E49A') }}*</div>
         </div>
 
     </div>

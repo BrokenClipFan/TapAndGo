@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,11 +13,16 @@
     <style>
         /* Modern CSS Reset & Dynamic Brand Theme Engine */
         :root {
-            --theme-primary: #1a4373;        /* TapAndGo Core Deep Blue */
-            --theme-primary-hover: #113259;  /* Darker Blue for states */
-            --theme-accent: #f97316;         /* TapAndGo Vibrant Orange */
-            --theme-accent-hover: #ea580c;   /* Darker Orange for hover */
-            --theme-dark: #0f172a;           /* Clean Off-Black */
+            --theme-primary: #1a4373;
+            /* TapAndGo Core Deep Blue */
+            --theme-primary-hover: #113259;
+            /* Darker Blue for states */
+            --theme-accent: #f97316;
+            /* TapAndGo Vibrant Orange */
+            --theme-accent-hover: #ea580c;
+            /* Darker Orange for hover */
+            --theme-dark: #0f172a;
+            /* Clean Off-Black */
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
@@ -30,10 +36,11 @@
         }
 
         /* Strict Fit Screen Constraints + Premium Gradient Background */
-        html, body {
+        html,
+        body {
             height: 100vh;
             width: 100vw;
-            overflow: hidden; 
+            overflow: hidden;
             /* Beautiful brand-aligned gradient background */
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1a4373 100%);
             display: flex;
@@ -84,7 +91,8 @@
             transition: color 0.2s;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: var(--theme-accent);
         }
 
@@ -95,25 +103,26 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            min-height: 0; 
+            min-height: 0;
         }
 
         /* Split-Pane Login Card */
         .login-card {
             background: rgba(255, 255, 255, 0.98);
             width: 100%;
-            max-width: 900px; 
+            max-width: 900px;
             height: 100%;
-            max-height: 600px; 
+            max-height: 600px;
             border-radius: 1.25rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             display: flex;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         /* Left Side: Logo Branding Section */
         .logo-branding-pane {
-            flex: 1.1; /* Slightly larger share of space for prominent layout */
+            flex: 1.1;
+            /* Slightly larger share of space for prominent layout */
             background-color: #ffffff;
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -125,8 +134,10 @@
         /* Optimized Logo Sizing Rules */
         .brand-logo-img {
             width: 100%;
-            max-width: 320px;   /* Noticeably larger screen presence */
-            max-height: 320px;  /* Balanced bound restraints */
+            max-width: 320px;
+            /* Noticeably larger screen presence */
+            max-height: 320px;
+            /* Balanced bound restraints */
             object-fit: contain;
             user-select: none;
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
@@ -147,9 +158,11 @@
         .form-pane::-webkit-scrollbar {
             width: 6px;
         }
+
         .form-pane::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .form-pane::-webkit-scrollbar-thumb {
             background: var(--border-color);
             border-radius: 10px;
@@ -259,6 +272,7 @@
             margin-bottom: 1.25rem;
             list-style-position: inside;
         }
+
         .alert-success {
             background-color: #dcfce7;
             border-color: #bbf7d0;
@@ -281,27 +295,31 @@
                 max-width: 440px;
                 max-height: 82vh;
             }
+
             .logo-branding-pane {
                 padding: 2rem 1.5rem;
                 border-right: none;
                 border-bottom: 1px solid var(--border-color);
                 max-height: 180px;
             }
+
             .brand-logo-img {
                 max-height: 120px;
                 max-width: 160px;
             }
+
             .form-pane {
                 padding: 2rem;
             }
         }
     </style>
 </head>
+
 <body>
 
     <nav class="custom-nav">
         <a class="nav-brand" href="#">
-            <i class="bi bi-layers-half"></i> 
+            <i class="bi bi-layers-half"></i>
             <span>TapAndGo</span>
         </a>
         <ul class="nav-links">
@@ -314,13 +332,13 @@
 
     <main class="main-wrapper">
         <div class="login-card">
-            
+
             <div class="logo-branding-pane">
-                <img src="{{ asset('storage/Logo.png') }}" alt="TapAndGo Logo" class="brand-logo-img">
+                <img src="{{ asset('public/Logo.png') }}" alt="TapAndGo Logo" class="brand-logo-img">
             </div>
-            
+
             <div class="form-pane">
-                
+
                 <div class="header-section">
                     <h3 class="form-title">Welcome Back</h3>
                     <p class="form-subtitle">Please sign in to secure your session</p>
@@ -344,11 +362,14 @@
                     @csrf
 
                     <div class="form-group">
-                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Email Address" required autofocus autocomplete="username">
+                        <input type="email" class="form-control" id="email" name="email"
+                            value="{{ old('email') }}" placeholder="Email Address" required autofocus
+                            autocomplete="username">
                     </div>
 
                     <div class="form-group">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required autocomplete="current-password">
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Password" required autocomplete="current-password">
                     </div>
 
                     <div class="form-options">
@@ -365,10 +386,11 @@
                         <span>Sign In</span>
                         <i class="bi bi-arrow-right"></i>
                     </button>
-                    
+
                     @if (Route::has('register'))
                         <div class="footer-divider">
-                            <span>Don't have an account? <a href="{{ route('register') }}" class="link-action">Create one</a></span>
+                            <span>Don't have an account? <a href="{{ route('register') }}" class="link-action">Create
+                                    one</a></span>
                         </div>
                     @endif
                 </form>
@@ -378,4 +400,5 @@
     </main>
 
 </body>
+
 </html>
