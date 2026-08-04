@@ -63,11 +63,10 @@ class ProductController extends Controller
     }
 
     public function destroy(Product $product) {
-        if($product->image_path && Storage::disk('public')->exists($product->image_path)) {
-            Storage::disk('public')->delete($product->image_path);
-        }
-
-        $product->delete();
+        
+        $product->update([
+            'visible' => false
+        ]);
 
         return back()->with('success', 'The product has been deleted successfully');
     }
