@@ -281,7 +281,7 @@
 
     <!-- Top Action Navigation -->
     <div class="actions-bar">
-        <a href="{{ route('cashier.terminal') ?? '#' }}" class="btn-action btn-back">
+        <a href="{{ route('cashier') ?? '#' }}" class="btn-action btn-back">
             <i class="bi bi-arrow-left"></i> Terminal
         </a>
         <button onclick="window.print()" class="btn-action btn-print">
@@ -350,28 +350,6 @@
                 </li>
             @endif
         </ul>
-
-        <!-- Items Left Behind / Excluded Section -->
-        @if (isset($excludedItems) && count($excludedItems) > 0)
-            <div class="excluded-box">
-                <div class="receipt-section-title">Excluded / Left Behind</div>
-                @foreach ($excludedItems as $item)
-                    <div class="excluded-item">
-                        <span>{{ $item['name'] }} ({{ $item['reason'] }})</span>
-                        <span>Qty: {{ $item['quantity'] }}</span>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <!-- Static Preview Excluded Section -->
-            <div class="excluded-box">
-                <div class="receipt-section-title">Excluded / Left Behind</div>
-                <div class="excluded-item">
-                    <span>Crispy Fries (Out of Stock)</span>
-                    <span>Qty: 1</span>
-                </div>
-            </div>
-        @endif
 
         <!-- Totals breakdown -->
         <div class="receipt-totals">

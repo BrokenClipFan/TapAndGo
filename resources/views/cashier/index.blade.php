@@ -12,6 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
         :root {
             --theme-primary: #1a4373;
             --theme-primary-hover: #113259;
@@ -29,13 +31,13 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
             min-height: 100vh;
             width: 100%;
-            background-color: var(--pos-bg);
+            background-color: var(--theme-dark);
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
@@ -46,14 +48,15 @@
         .pos-header {
             background-color: var(--theme-primary);
             color: #ffffff;
-            padding: 0.6rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 0.75rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .pos-brand {
@@ -64,37 +67,36 @@
         }
 
         .pos-brand-logo {
-            height: 38px;
+            height: 42px;
             width: auto;
             object-fit: contain;
         }
 
         .pos-brand-title {
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 800;
+            font-size: 1.05rem;
             color: #ffffff;
-            opacity: 0.9;
             border-left: 1px solid rgba(255, 255, 255, 0.25);
             padding-left: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
-        /* Responsive Main Container */
+        /* Responsive Workspace */
         .pos-workspace {
             flex-grow: 1;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             padding: 1.5rem;
             width: 100%;
         }
 
         .terminal-card {
             width: 100%;
-            max-width: 850px;
+            max-width: 900px;
             background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -102,8 +104,8 @@
         }
 
         .terminal-header {
-            padding: 1.25rem 1.5rem;
-            background-color: white;
+            padding: 1.25rem 1.75rem;
+            background-color: #ffffff;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
@@ -113,46 +115,47 @@
         }
 
         .terminal-body {
-            padding: 1.5rem;
+            padding: 1.75rem;
+            background-color: #ffffff;
         }
 
-        /* Input Group Form */
-        .scanner-form {
-            display: flex;
-            width: 100%;
-            align-items: center;
-        }
-
+        /* Scanner Form */
         .scanner-input-group {
             position: relative;
-            box-shadow: 0 4px 12px rgba(26, 67, 115, 0.08);
-            border-radius: 0.5rem;
+            box-shadow: 0 4px 14px rgba(26, 67, 115, 0.08);
+            border-radius: 1rem;
             overflow: hidden;
             display: flex;
             background: #ffffff;
             border: 2px solid var(--theme-primary);
             margin-bottom: 1.5rem;
             width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .scanner-input-group:focus-within {
+            border-color: var(--theme-accent);
         }
 
         .scanner-input {
             border: none !important;
-            padding: 1rem 1.25rem;
+            padding: 1.1rem 1.25rem;
             flex-grow: 1;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
             outline: none;
             text-transform: uppercase;
             width: 100%;
             min-width: 0;
+            color: var(--theme-primary);
         }
 
         .scanner-btn {
             background-color: var(--theme-primary);
             color: white;
             border: none;
-            width: 4rem;
+            width: 4.5rem;
             height: 100%;
             display: flex;
             align-items: center;
@@ -169,9 +172,9 @@
         /* Items Grid */
         .items-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
             gap: 1rem;
-            max-height: 380px;
+            max-height: 400px;
             overflow-y: auto;
             margin-bottom: 1.25rem;
             padding: 0.25rem;
@@ -180,41 +183,35 @@
         .item-card {
             background: #ffffff;
             border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
+            border-radius: 1rem;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
             transition: all 0.2s ease;
         }
 
-        /* Grayed out entire card state */
         .item-card.zero-qty,
         .item-card.outline-out-of-stock,
         .item-card.outline-unavailable {
-            background: #f1f5f9;
-            opacity: 0.65;
+            background: #f8fafc;
+            opacity: 0.7;
         }
 
-        /* Card Outlines for Status Issues */
-        .item-card.outline-out-of-stock {
-            border: 2px solid #dc2626;
-            box-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
-        }
-
+        .item-card.outline-out-of-stock,
         .item-card.outline-unavailable {
-            border: 2px solid #dc2626;
-            box-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+            border: 2px solid var(--theme-danger);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
 
         .item-card.outline-invalid {
-            border: 2px solid #ea580c;
-            box-shadow: 0 0 8px rgba(234, 88, 12, 0.3);
+            border: 2px solid var(--theme-accent);
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
         }
 
         .item-image-container {
             width: 100%;
-            height: 120px;
+            height: 125px;
             overflow: hidden;
             background-color: #f1f5f9;
             position: relative;
@@ -227,7 +224,7 @@
         }
 
         .item-content {
-            padding: 0.75rem;
+            padding: 0.85rem;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -239,12 +236,13 @@
             font-size: 0.95rem;
             color: var(--text-dark);
             margin-bottom: 0.2rem;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .item-meta {
             font-size: 0.75rem;
             color: var(--text-muted);
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
@@ -253,15 +251,16 @@
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
+            padding-top: 0.25rem;
         }
 
         .item-price {
-            font-size: 1rem;
-            font-weight: 800;
+            font-size: 1.05rem;
+            font-weight: 900;
             color: var(--theme-primary);
         }
 
-        /* Buttons Layout */
+        /* Action Buttons */
         .action-buttons-group {
             display: flex;
             gap: 0.75rem;
@@ -270,35 +269,39 @@
 
         .btn-custom {
             border: none;
-            border-radius: 0.5rem;
-            font-weight: 700;
-            font-size: 1rem;
+            border-radius: 0.85rem;
+            font-weight: 800;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.9rem 1.25rem;
+            padding: 1rem 1.25rem;
             flex: 1 1 200px;
         }
 
         .btn-custom-success {
             background-color: var(--theme-success);
             color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
         }
 
         .btn-custom-success:hover {
             background-color: #059669;
+            transform: translateY(-1px);
         }
 
         .btn-custom-danger {
             background-color: var(--theme-danger);
             color: white;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
         }
 
         .btn-custom-danger:hover {
             background-color: #dc2626;
+            transform: translateY(-1px);
         }
 
         .btn-custom-secondary {
@@ -314,7 +317,7 @@
             display: none !important;
         }
 
-        /* Toast Alert */
+        /* Notifications & Modals */
         .custom-banner {
             position: fixed;
             top: 20px;
@@ -326,20 +329,19 @@
             border: 2px solid #bbf7d0;
             color: #14532d;
             padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             max-width: 90vw;
         }
 
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -352,8 +354,8 @@
             background: #ffffff;
             width: 100%;
             max-width: 550px;
-            border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -370,7 +372,7 @@
         }
 
         .modal-body {
-            padding: 1.25rem 1.5rem;
+            padding: 1.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -399,27 +401,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 0.75rem;
-            border-radius: 0.5rem;
+            padding: 0.7rem 0.85rem;
+            border-radius: 0.75rem;
             background: #f8fafc;
             font-size: 0.9rem;
+            border: 1px solid var(--border-color);
         }
 
         .badge-status {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.25rem 0.55rem;
+            border-radius: 6px;
             color: #fff;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .badge-danger {
-            background: #dc2626;
+            background: var(--theme-danger);
         }
 
         .badge-warning {
-            background: #ea580c;
+            background: var(--theme-accent);
         }
 
         @keyframes slideIn {
@@ -442,7 +446,6 @@
             }
         }
 
-        /* Mobile Breakpoint Adjustments */
         @media (max-width: 576px) {
             .pos-workspace {
                 padding: 0.75rem;
@@ -454,11 +457,11 @@
 
             .items-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                max-height: 300px;
+                max-height: 320px;
             }
 
             .item-image-container {
-                height: 90px;
+                height: 95px;
             }
 
             .pos-brand-title {
@@ -473,19 +476,23 @@
 </head>
 
 <body>
-
+    @include('partials.splash-screen', [
+        'title' => 'Tap&Go',
+        'subtitle' => 'Payment Terminal',
+    ])
     <header class="pos-header">
         <a class="pos-brand" href="#">
             <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="pos-brand-logo">
             <span class="pos-brand-title">Kiosk Payment Terminal</span>
         </a>
-        <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
             <span
-                style="background: white; color: var(--text-dark); padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.85rem;">
-                <i class="bi bi-shop text-primary"></i> Station #03
+                style="background: rgba(255,255,255,0.15); color: #ffffff; padding: 0.4rem 0.8rem; border-radius: 0.6rem; font-weight: 800; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.2);">
+                <i class="bi bi-shop text-orange-400"></i> Station #03
             </span>
-            <div style="color: white; font-weight: 700; font-size: 0.9rem;">
-                Cashier Terminal
+            <div
+                style="color: white; font-weight: 800; font-size: 0.85rem; background: var(--theme-accent); padding: 0.4rem 0.8rem; border-radius: 0.6rem;">
+                Cashier Active
             </div>
         </div>
     </header>
@@ -494,38 +501,41 @@
         <div class="terminal-card">
             <div class="terminal-header">
                 <div>
-                    <h5 style="font-weight: 800; color: var(--text-dark); margin: 0;">Scan Kiosk Order</h5>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Enter or scan customer receipt
-                        code</p>
+                    <h5 style="font-weight: 900; color: var(--text-dark); margin: 0; font-size: 1.15rem;">Scan Kiosk
+                        Order</h5>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; font-weight: 500;">Enter or scan
+                        customer receipt pass code</p>
                 </div>
                 <span
-                    style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.3rem 0.6rem; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700;">
-                    <i class="bi bi-wifi"></i> Ready for Code
+                    style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.4rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 0.35rem;">
+                    <i class="bi bi-wifi text-emerald-500"></i> Terminal Ready
                 </span>
             </div>
 
             <div class="terminal-body">
                 <!-- Input Scanner -->
                 <div class="scanner-input-group">
-                    <span style="display: flex; align-items: center; padding-left: 1.25rem; color: var(--text-muted);">
-                        <i class="bi bi-qr-code-scan" style="color: var(--theme-primary); font-size: 1.5rem;"></i>
+                    <span
+                        style="display: flex; align-items: center; padding-left: 1.25rem; color: var(--theme-primary);">
+                        <i class="bi bi-qr-code-scan" style="font-size: 1.5rem;"></i>
                     </span>
-                    <form action="{{ route('cashier.order') }}" method="POST" class="scanner-form">
+                    <form action="{{ route('cashier.order') }}" method="POST" class="scanner-form"
+                        style="display:flex; width:100%;">
                         @csrf
                         <input type="text" name="code" class="scanner-input"
-                            placeholder="ENTER CODE (E.G. 558D-E49A)" id="kiosk-code-input" autofocus required>
+                            placeholder="ENTER ORDER CODE (E.G. 558D-E49A)" id="kiosk-code-input" autofocus required>
                         <button class="scanner-btn" type="submit" title="Fetch Kiosk Order">
-                            <i class="bi bi-arrow-right-circle-fill" style="font-size: 1.5rem;"></i>
+                            <i class="bi bi-arrow-right-circle-fill" style="font-size: 1.6rem;"></i>
                         </button>
                     </form>
                 </div>
 
                 <!-- Empty State -->
-                <div id="empty-state" style="text-align: center; padding: 3rem 1rem;" class="text-muted">
+                <div id="empty-state" style="text-align: center; padding: 3.5rem 1rem;" class="text-muted">
                     <i class="bi bi-receipt-cutoff"
-                        style="font-size: 3.5rem; color: var(--text-muted); display: block; margin-bottom: 0.75rem;"></i>
-                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">Waiting for Customer
-                        Code</h6>
+                        style="font-size: 4rem; color: #cbd5e1; display: block; margin-bottom: 0.75rem;"></i>
+                    <h6 style="font-weight: 800; color: var(--text-dark); margin-bottom: 0.25rem; font-size: 1.1rem;">
+                        Waiting for Customer Code</h6>
                     <p style="font-size: 0.85rem; color: var(--text-muted);">Scan barcode or type the kiosk pass code
                         above.</p>
                 </div>
@@ -533,34 +543,37 @@
                 <!-- Active Loaded Order -->
                 <div id="loaded-order-panel" class="d-none">
                     <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.5rem;">
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px dashed var(--border-color); flex-wrap: wrap; gap: 0.5rem;">
                         <div>
                             <span
-                                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order
-                                Number</span>
-                            <h4 style="font-weight: 800; color: var(--theme-primary); margin: 0;" id="display-order-id">
-                                #6</h4>
+                                style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; tracking-wider;">Order
+                                Ticket</span>
+                            <h4 style="font-weight: 900; color: var(--theme-primary); margin: 0; font-size: 1.5rem;"
+                                id="display-order-id">#6</h4>
                         </div>
                         <div style="text-align: right;">
                             <span
-                                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Pass
+                                style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">Pass
                                 Code</span>
-                            <div style="font-weight: 800; color: var(--theme-accent); font-size: 1.1rem;"
+                            <div style="font-weight: 900; color: var(--theme-accent); font-size: 1.2rem; font-family: monospace;"
                                 id="display-pass-code">558D-E49A</div>
                         </div>
                     </div>
 
                     <!-- Items Grid -->
-                    <h6 style="font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem;">Scanned Items</h6>
+                    <h6
+                        style="font-weight: 800; color: var(--text-dark); margin-bottom: 0.6rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Scanned Order Items</h6>
                     <div class="items-grid" id="kiosk-items-grid">
-                        <!-- Populated by JS -->
+                        <!-- Populated dynamically via JS -->
                     </div>
 
                     <!-- Total Due -->
                     <div
-                        style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 2px solid var(--border-color); font-weight: 800; font-size: 1.2rem; color: var(--text-dark); margin-bottom: 1rem;">
-                        <span>Total Due:</span>
-                        <span style="color: var(--theme-primary);" id="display-order-total">₱0.00</span>
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-top: 2px solid var(--border-color); font-weight: 900; font-size: 1.25rem; color: var(--text-dark); margin-bottom: 1.25rem;">
+                        <span>Total Amount Due:</span>
+                        <span style="color: var(--theme-primary); font-size: 1.5rem;"
+                            id="display-order-total">₱0.00</span>
                     </div>
 
                     <!-- Actions -->
@@ -568,7 +581,6 @@
                         <form action="{{ route('cashier.order.cancel') }}" method="POST">
                             @csrf
                             @method('DELETE')
-
                             <input type="number" name="id" class="idInput">
                             <button type="submit" class="btn-custom btn-custom-danger">
                                 <i class="bi bi-trash3-fill"></i> Cancel Order
@@ -593,7 +605,8 @@
     <div class="modal-overlay d-none" id="confirmation-modal">
         <div class="modal-card">
             <div class="modal-header">
-                <h5 style="font-weight: 800; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <h5
+                    style="font-weight: 900; margin: 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                     <i class="bi bi-cart-check-fill" style="color: var(--theme-accent);"></i> Confirm Order Checkout
                 </h5>
                 <button type="button" onclick="closeConfirmationModal()"
@@ -605,7 +618,7 @@
                 <!-- Included Items -->
                 <div>
                     <h6
-                        style="font-weight: 800; color: var(--theme-success); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+                        style="font-weight: 800; color: var(--theme-success); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem; letter-spacing: 0.5px;">
                         <i class="bi bi-check-circle-fill"></i> Items to be Purchased
                     </h6>
                     <ul class="summary-list" id="modal-purchased-items">
@@ -616,8 +629,8 @@
                 <!-- Left Behind / Excluded Items -->
                 <div id="modal-excluded-section" class="d-none">
                     <h6
-                        style="font-weight: 800; color: var(--theme-danger); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Items Left Behind / Excluded
+                        style="font-weight: 800; color: var(--theme-danger); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem; letter-spacing: 0.5px;">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Items Excluded / Unavailable
                     </h6>
                     <ul class="summary-list" id="modal-excluded-items">
                         <!-- Populated by JS -->
@@ -626,19 +639,19 @@
 
                 <!-- Total Summary -->
                 <div
-                    style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: var(--text-dark);">Final Total Due:</span>
-                    <span style="font-weight: 800; font-size: 1.2rem; color: var(--theme-primary);"
+                    style="border-top: 2px solid var(--border-color); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 800; color: var(--text-dark);">Final Total Due:</span>
+                    <span style="font-weight: 900; font-size: 1.4rem; color: var(--theme-primary);"
                         id="modal-final-total">₱0.00</span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="closeConfirmationModal()" class="btn-custom btn-custom-secondary"
-                    style="flex: 0 0 auto; padding: 0.6rem 1rem;">
+                    style="flex: 0 0 auto; padding: 0.65rem 1.25rem;">
                     Back / Edit
                 </button>
                 <button type="button" onclick="submitFinalPayment()" class="btn-custom btn-custom-success"
-                    style="flex: 1 1 auto; padding: 0.6rem 1rem;">
+                    style="flex: 1 1 auto; padding: 0.65rem 1.25rem;">
                     <i class="bi bi-check2-circle"></i> Confirm & Pay
                 </button>
             </div>
@@ -650,9 +663,9 @@
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <i class="bi bi-info-circle-fill" id="toast-icon" style="font-size: 1.25rem;"></i>
             <div>
-                <strong style="display: block; font-weight: 700; color: var(--text-dark); font-size: 0.9rem;"
+                <strong style="display: block; font-weight: 800; color: var(--text-dark); font-size: 0.9rem;"
                     id="toast-title">Notification</strong>
-                <span style="font-size: 0.8rem;" id="toast-msg">Action processed.</span>
+                <span style="font-size: 0.8rem; font-weight: 500;" id="toast-msg">Action processed.</span>
             </div>
         </div>
     </div>
@@ -722,13 +735,12 @@
                     const maxStock = itemStocks[item.id] !== undefined ? parseInt(itemStocks[item.id]) : (item
                         .product ? parseInt(item.product.stock) : 9999);
 
-                    // Determine Outline Class, Badges, and Disabled State for Action Buttons
+                    // Determine Badges and Classes
                     let cardOutlineClass = '';
                     let badgeHtml = '';
                     let isButtonDisabled = false;
                     let isProblematic = false;
 
-                    // Dynamically check if quantity has been lowered back within stock limits
                     let isCurrentlyInvalid = invalidItems.includes(item.id);
                     if (isCurrentlyInvalid && qty <= maxStock) {
                         isCurrentlyInvalid = false;
@@ -739,18 +751,18 @@
                         isButtonDisabled = true;
                         isProblematic = true;
                         badgeHtml =
-                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #dc2626; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">OUT OF STOCK</span></div>';
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span class="badge-status badge-danger">OUT OF STOCK</span></div>';
                     } else if (unavailableItems.includes(item.id)) {
                         cardOutlineClass = 'outline-unavailable';
                         isButtonDisabled = true;
                         isProblematic = true;
                         badgeHtml =
-                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #dc2626; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">UNAVAILABLE</span></div>';
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span class="badge-status badge-danger">UNAVAILABLE</span></div>';
                     } else if (isCurrentlyInvalid) {
                         cardOutlineClass = 'outline-invalid';
                         isProblematic = true;
                         badgeHtml =
-                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span style="background: #ea580c; color: #fff; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">INVALID QTY</span></div>';
+                            '<div style="position: absolute; bottom: 8px; left: 8px; z-index: 2;"><span class="badge-status badge-warning">INVALID QTY</span></div>';
                     }
 
                     if (qty > 0 && !isProblematic) {
@@ -777,9 +789,9 @@
                                 <div class="item-meta">₱${price.toFixed(2)} each (Stock: ${maxStock})</div>
                             </div>
                             <div style="display: flex; align-items: center; justify-content: space-between; margin: 0.5rem 0;">
-                                <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 4px; overflow:hidden; background: #fff;">
+                                <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 6px; overflow:hidden; background: #fff;">
                                     <button type="button" onclick="updateQuantity(${item.id}, -1)" ${minusDisabledAttr}><i class="bi bi-dash"></i></button>
-                                    <span style="padding: 0 0.6rem; font-weight: 700; font-size: 0.85rem;">${qty}</span>
+                                    <span style="padding: 0 0.6rem; font-weight: 800; font-size: 0.85rem;">${qty}</span>
                                     <button type="button" onclick="updateQuantity(${item.id}, 1)" ${plusDisabledAttr}><i class="bi bi-plus"></i></button>
                                 </div>
                             </div>
@@ -952,7 +964,7 @@
                 banner.style.backgroundColor = "#fef2f2";
                 banner.style.borderColor = "#fca5a5";
                 banner.style.color = "#7f1d1d";
-                toastTitle.innerText = "Error / Action Failed";
+                toastTitle.innerText = "Action Failed";
                 toastIcon.className = "bi bi-x-circle-fill";
             } else {
                 banner.style.backgroundColor = "#dcfce7";

@@ -15,16 +15,19 @@ class ProductController extends Controller
             'name'        => 'required|string|max:255',
             'category_id' => 'required|numeric',
             'price'       => 'required|numeric',
-            'quantity'    => 'required|numeric',
+            'stock'    => 'required|numeric',
             'image'       => 'required|image|mimes:jpeg,png,jpg,webp,avif',
         ]);
 
         $validated['image_path'] = $request->file('image')->store('products', 'public');
-        $validated['stock'] = $request->quantity;
+
+        if($validated['stock'] <= 0){
+            $validated['status'] = 'out of stock';
+        }
 
         Product::create($validated);    
 
-        return redirect()->route('admin.dashboard')->with('success', 'A new product has been created');
+        return redirect()->back()->with('success', 'A new product has been created');
     }
 
     public function update(Request $request, Product $product) {
@@ -32,20 +35,11 @@ class ProductController extends Controller
             'category_id' => 'nullable|numeric',
             'name'        => 'nullable|string|max:255',
             'price'       => 'nullable|numeric',
-            'quantity'    => 'nullable|numeric',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,webp,avif',
+            'stock'    => 'nullable|numeric',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:4028',
         ]);
 
         $imagePath = $product->image_path;
-        $validated['stock'] = $request->quantity;
-
-        if($validated['stock'] > 0 && $product->status == 'out of stock' && $product->status != 'unavailable') {
-            $validated['status'] = 'available';
-        }
-
-        if($validated['stock'] == 0 && $product->status != 'unavailable') {
-            $validated['status'] = 'out of stock';
-        }
 
         if($request->hasFile('image')) {
             if($imagePath && Storage::disk('public')->exists($imagePath)) {
@@ -55,11 +49,20 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
+        if($validated['stock'] > 0 && $product->status == 'out of stock' && $product->status != 'unavailable') {
+            $validated['status'] = 'available';
+        }
+
+        if($validated['stock'] == 0 && $product->status != 'unavailable') {
+            $validated['status'] = 'out of stock';
+        }
+
         $dataToUpdate = array_filter($validated, fn($value) => !is_null($value));
+        $dataToUpdate['image_path'] = $imagePath;
 
         $product->update($dataToUpdate);
 
-        return back()->with('success', 'Product has been updated successfully');
+        return redirect()->back()->with('success', 'Product has been updated successfully');
     }
 
     public function destroy(Product $product) {
@@ -68,7 +71,7 @@ class ProductController extends Controller
             'visible' => false
         ]);
 
-        return back()->with('success', 'The product has been deleted successfully');
+        return redirect()->back()->with('success', 'The product has been deleted successfully');
     }
 
     public function restock(Request $request, Product $product) {
@@ -77,8 +80,17 @@ class ProductController extends Controller
         ]);
 
         $product->stock = $product->stock + $request->quantity;
+        
+        if ($product->stock <= 0 && $product->status != 'unavailable') {
+            $product->status = 'out of stock';
+        }
+
+        if($product->stock > 0 && $product->status != 'unavailable') {
+            $product->status = 'available';
+        }
+
         $product->save();
 
-        return back()->with('success', $product->name . " has been restocked!");
+        return redirect()->back()->with('success', $product->name . " has been restocked!");
     }
 }

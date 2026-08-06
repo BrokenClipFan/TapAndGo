@@ -13,11 +13,14 @@
     <style>
         :root {
             --brand-navy: #1a4373;
-            --brand-navy-light: #225188;
+            --brand-navy-dark: #123055;
             --brand-orange: #ff6b00;
             --brand-orange-hover: #e05e00;
             --brand-bg-light: #f4f6f9;
-            --card-border: rgba(0, 0, 0, 0.08);
+            --theme-card-radius: 18px;
+            --theme-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --theme-card-shadow-hover: 0 20px 30px -10px rgba(0, 0, 0, 0.2), 0 10px 15px -5px rgba(0, 0, 0, 0.15);
+            --card-border: rgba(0, 0, 0, 0.06);
         }
 
         body {
@@ -35,13 +38,14 @@
             color: #ffffff;
             border: none;
             font-weight: 600;
-            transition: all 0.2s ease;
+            border-radius: 50px;
+            transition: all 0.25 ease;
         }
 
         .btn-brand-orange:hover {
             background-color: var(--brand-orange-hover);
             color: #ffffff;
-            box-shadow: 0 4px 10px rgba(255, 107, 0, 0.25);
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
         }
 
         .text-brand-orange {
@@ -57,57 +61,49 @@
         }
 
         /* Custom Scrollbars */
-        .custom-scroll::-webkit-scrollbar {
+        .custom-scroll::-webkit-scrollbar,
+        .modal-body::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
 
-        .custom-scroll::-webkit-scrollbar-track {
+        .custom-scroll::-webkit-scrollbar-track,
+        .modal-body::-webkit-scrollbar-track {
             background: #f1f5f9;
         }
 
-        .custom-scroll::-webkit-scrollbar-thumb {
+        .custom-scroll::-webkit-scrollbar-thumb,
+        .modal-body::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 4px;
         }
 
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        /* KPI Cards & Click Hooks */
+        /* UNIFIED KPI STAT CARDS */
         .kpi-card {
             border: 1px solid var(--card-border);
-            border-radius: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: var(--theme-card-radius);
+            box-shadow: var(--theme-card-shadow);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #ffffff;
         }
 
         .kpi-card-clickable {
             cursor: pointer;
-            position: relative;
         }
 
         .kpi-card-clickable:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(26, 67, 115, 0.12) !important;
-        }
-
-        .kpi-card-clickable.border-warning-subtle:hover {
-            border-color: #ffc107 !important;
-        }
-
-        .kpi-card-clickable.border-danger-subtle:hover {
-            border-color: #dc3545 !important;
+            transform: translateY(-4px);
+            box-shadow: var(--theme-card-shadow-hover);
         }
 
         .kpi-icon-box {
-            width: 46px;
-            height: 46px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            font-size: 1.25rem;
+            border-radius: 14px;
+            font-size: 1.35rem;
         }
 
         @keyframes pulse-glow {
@@ -117,7 +113,7 @@
             }
 
             50% {
-                transform: scale(1.05);
+                transform: scale(1.04);
                 opacity: 1;
             }
 
@@ -136,53 +132,144 @@
             overflow-y: auto;
         }
 
-        .category-grid-card {
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
+        /* MAIN GLASS/SURFACE CONTAINER */
+        .surface-card {
             background: #ffffff;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            border-radius: var(--theme-card-radius);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--theme-card-shadow);
+        }
+
+        /* FULL-IMAGE OVERLAY CARDS (UNIFIED CATEGORY & PRODUCT CARD LOOK) */
+        .overlay-card {
             position: relative;
+            width: 100%;
+            border-radius: var(--theme-card-radius);
             overflow: hidden;
+            background-color: #0f172a;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.25rem;
+            box-shadow: var(--theme-card-shadow);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .category-grid-card:hover {
-            border-color: var(--brand-orange);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(255, 107, 0, 0.12) !important;
+        .overlay-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: var(--theme-card-shadow-hover);
         }
 
-        .category-card-img {
-            width: 64px;
-            height: 64px;
-            object-fit: cover;
-            border-radius: 12px;
+        /* Gradient Mask for Readability */
+        .overlay-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 10%, rgba(0, 0, 0, 0.88) 85%);
+            z-index: 1;
+            transition: opacity 0.25s ease;
         }
 
-        .status-badge {
+        .overlay-card-top {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .overlay-card-bottom {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+        }
+
+        .category-overlay-card {
+            height: 230px;
+            cursor: pointer;
+        }
+
+        .product-overlay-card {
+            height: 290px;
+        }
+
+        .card-title-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.25;
+            margin-bottom: 0.2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-subtitle-text {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-card-action {
+            border-radius: 50px;
+            padding: 0.45rem 1rem;
             font-weight: 600;
-            font-size: 0.75rem;
-            padding: 0.35em 0.75em;
-            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
         }
 
-        .modal-subheader-text {
-            color: #cbd5e1 !important;
+        .btn-card-action:hover {
+            transform: translateY(-1px);
         }
 
         .img-preview-box {
             width: 80px;
             height: 80px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid #dee2e6;
+        }
+
+        /* MODALS & OVERLAYS */
+        .modal-content {
+            border-radius: var(--theme-card-radius) !important;
+            overflow: hidden;
+        }
+
+        .modal-fixed-height .modal-dialog {
+            height: calc(100% - 3.5rem);
+            margin-top: 1.75rem;
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-fixed-height .modal-content {
+            height: 82vh !important;
+            max-height: 82vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .modal-fixed-height .modal-header {
+            flex-shrink: 0;
+        }
+
+        .modal-fixed-height .modal-body {
+            flex: 1 1 auto !important;
+            overflow-y: auto !important;
         }
     </style>
 </head>
 
 <body class="vh-100 overflow-hidden d-flex flex-column">
+    @include('partials.notifications')
 
-    <!-- Top Admin Navigation Bar -->
+    <!-- Top Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-brand-bg px-3 py-2 flex-shrink-0 shadow-sm">
         <div class="container-fluid p-0">
             <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#">
@@ -198,7 +285,7 @@
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <ul class="nav nav-pills me-auto mb-2 mb-lg-0 ms-lg-4 gap-1">
                     <li class="nav-item">
-                        <span class="nav-link active px-3 py-1-5 rounded-2 fw-semibold text-white bg-brand-orange">
+                        <span class="nav-link active px-3 py-1-5 rounded-pill fw-semibold text-white bg-brand-orange">
                             <i class="bi bi-grid-1x2-fill me-1"></i> Menu Management
                         </span>
                     </li>
@@ -211,7 +298,7 @@
                     </div>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
-                        <button type="submit" class="btn btn-outline-light btn-sm rounded-2 px-3">
+                        <button type="submit" class="btn btn-outline-light btn-sm rounded-pill px-3">
                             <i class="bi bi-box-arrow-right me-1"></i> Logout
                         </button>
                     </form>
@@ -220,47 +307,33 @@
         </div>
     </nav>
 
-    <!-- Main Viewport Workspace -->
+    <!-- Main Workspace -->
     <div class="container-fluid flex-grow-1 overflow-hidden p-3 p-md-4 d-flex flex-column">
         <div class="d-flex flex-column h-100 gap-3">
-
-            <!-- Alert Flash Feedback Message Banner -->
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show m-0 py-2 px-3 shadow-sm flex-shrink-0"
-                    role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            <!-- SECTION 1: KPI STATS CARDS -->
+            <!-- UNIFIED KPI STATS CARDS -->
             <div class="row g-3 flex-shrink-0">
-                <!-- Total Categories -->
                 <div class="col-sm-6 col-xl-3">
-                    <div class="card bg-white shadow-sm kpi-card h-100">
+                    <div class="card kpi-card h-100">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <span
-                                    class="text-muted small fw-semibold text-uppercase tracking-wide">Categories</span>
+                                <span class="text-muted small fw-semibold text-uppercase">Categories</span>
                                 <h2 class="fw-bold text-brand-navy my-1">{{ count($categories) }}</h2>
                                 <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill small">
-                                    <i class="bi bi-layers-fill me-1"></i> Active Menu Sections
+                                    <i class="bi bi-layers-fill me-1"></i> Active Sections
                                 </span>
                             </div>
-                            <div class="kpi-icon-box bg-warning bg-opacity-10 text-warning">
+                            <div class="kpi-icon-box bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-tags-fill"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Total Products -->
                 <div class="col-sm-6 col-xl-3">
-                    <div class="card bg-white shadow-sm kpi-card h-100">
+                    <div class="card kpi-card h-100">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Total
-                                    Products</span>
+                                <span class="text-muted small fw-semibold text-uppercase">Total Products</span>
                                 <h2 class="fw-bold text-brand-navy my-1">{{ count($products) }}</h2>
                                 <span class="badge bg-info bg-opacity-10 text-info rounded-pill small">
                                     <i class="bi bi-box-seam me-1"></i> Items in Inventory
@@ -273,21 +346,19 @@
                     </div>
                 </div>
 
-                <!-- Low Stock Warning -->
                 @php
                     $lowStockProducts = $products->filter(fn($p) => $p->stock > 0 && $p->stock < 20);
                     $lowStockCount = $lowStockProducts->count();
                 @endphp
                 <div class="col-sm-6 col-xl-3">
-                    <div class="card bg-white shadow-sm kpi-card kpi-card-clickable border-warning-subtle h-100"
-                        data-bs-toggle="modal" data-bs-target="#lowStockModal">
+                    <div class="card kpi-card kpi-card-clickable border-warning-subtle h-100" data-bs-toggle="modal"
+                        data-bs-target="#lowStockModal">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Low Stock
-                                    Alert</span>
+                                <span class="text-muted small fw-semibold text-uppercase">Low Stock Alert</span>
                                 <h2 class="fw-bold text-brand-navy my-1">{{ $lowStockCount }}</h2>
                                 <span class="badge bg-warning text-dark rounded-pill small pulse-hook">
-                                    <i class="bi bi-eye-fill me-1"></i> View Low Stock Items
+                                    <i class="bi bi-eye-fill me-1"></i> View Low Stock
                                 </span>
                             </div>
                             <div class="kpi-icon-box bg-warning bg-opacity-10 text-warning">
@@ -297,21 +368,19 @@
                     </div>
                 </div>
 
-                <!-- Out of Stock Alert -->
                 @php
                     $outOfStockProducts = $products->filter(fn($p) => $p->stock <= 0);
                     $outOfStockCount = $outOfStockProducts->count();
                 @endphp
                 <div class="col-sm-6 col-xl-3">
-                    <div class="card bg-white shadow-sm kpi-card kpi-card-clickable border-danger-subtle h-100"
-                        data-bs-toggle="modal" data-bs-target="#outOfStockModal">
+                    <div class="card kpi-card kpi-card-clickable border-danger-subtle h-100" data-bs-toggle="modal"
+                        data-bs-target="#outOfStockModal">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Out of
-                                    Stock</span>
+                                <span class="text-muted small fw-semibold text-uppercase">Out of Stock</span>
                                 <h2 class="fw-bold text-brand-navy my-1">{{ $outOfStockCount }}</h2>
                                 <span class="badge bg-danger text-white rounded-pill small pulse-hook">
-                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> View Out of Stock Items
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> View Out of Stock
                                 </span>
                             </div>
                             <div class="kpi-icon-box bg-danger bg-opacity-10 text-danger">
@@ -322,25 +391,25 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: CATEGORY GRID CONTAINER -->
-            <div class="card border-0 shadow-sm rounded-3 flex-grow-1 d-flex flex-column overflow-hidden mb-2">
+            <!-- UNIFIED CATEGORY CONTAINER GRID -->
+            <div class="surface-card flex-grow-1 d-flex flex-column overflow-hidden mb-2">
                 <div
                     class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center flex-shrink-0 flex-wrap gap-2">
                     <div>
                         <h6 class="fw-bold text-brand-navy mb-0">
                             <i class="bi bi-grid-fill me-2 text-brand-orange"></i>Menu Categories
                         </h6>
-                        <small class="text-muted">Click any category card to view, add, or manage its products</small>
+                        <small class="text-muted">Click any category card to view and manage its products</small>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <!-- Dynamic Live Category Filter -->
                         <div class="input-group input-group-sm" style="width: 220px;">
-                            <span class="input-group-text bg-light border-end-0"><i
+                            <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i
                                     class="bi bi-search text-muted"></i></span>
                             <input type="text" id="categorySearchInput"
-                                class="form-control bg-light border-start-0 ps-0" placeholder="Filter categories...">
+                                class="form-control bg-light border-start-0 rounded-end-pill ps-0"
+                                placeholder="Filter categories...">
                         </div>
-                        <button class="btn btn-sm btn-brand-orange rounded-2 px-3" data-bs-toggle="modal"
+                        <button class="btn btn-sm btn-brand-orange px-3" data-bs-toggle="modal"
                             data-bs-target="#addCategoryModal">
                             <i class="bi bi-plus-circle me-1"></i> Add Category
                         </button>
@@ -354,39 +423,32 @@
                                 $catProducts = $products->where('category_id', $category->id);
                                 $prodCount = $catProducts->count();
                                 $hasLowStock = $catProducts->contains(fn($p) => $p->stock < 20);
+                                $catImgUrl = $category->image_path
+                                    ? Storage::url($category->image_path)
+                                    : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop';
                             @endphp
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3 category-item-col"
                                 data-category-name="{{ strtolower($category->name) }}">
-                                <div class="category-grid-card shadow-sm p-3 btn-view-category-products"
+
+                                <div class="overlay-card category-overlay-card btn-view-category-products"
+                                    style="background-image: url('{{ $catImgUrl }}');"
                                     data-category-id="{{ $category->id }}"
                                     data-category-name="{{ $category->name }}">
 
-                                    <div class="d-flex align-items-start justify-content-between mb-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            @if ($category->image_path)
-                                                <img src="{{ Storage::url($category->image_path) }}"
-                                                    alt="{{ $category->name }}" class="category-card-img border">
-                                            @else
-                                                <div
-                                                    class="category-card-img bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center border border-warning border-opacity-25">
-                                                    <i class="bi bi-tags-fill fs-3"></i>
-                                                </div>
-                                            @endif
-                                            <div>
-                                                <h5 class="fw-bold text-brand-navy mb-0 text-truncate"
-                                                    style="max-width: 130px;">{{ $category->name }}</h5>
-                                                <span class="badge bg-light text-secondary border mt-1">
-                                                    {{ $prodCount }} {{ Str::plural('Product', $prodCount) }}
-                                                </span>
-                                            </div>
-                                        </div>
+                                    <!-- TOP BADGES AND ACTION MENU -->
+                                    <div class="overlay-card-top">
+                                        <span
+                                            class="badge bg-white bg-opacity-90 text-dark backdrop-blur rounded-pill px-2.5 py-1.5 shadow-sm">
+                                            {{ $prodCount }} {{ Str::plural('Item', $prodCount) }}
+                                        </span>
 
                                         <div class="dropdown" onclick="event.stopPropagation();">
-                                            <button class="btn btn-sm btn-light border py-1 px-2 rounded-2"
+                                            <button
+                                                class="btn btn-sm btn-light bg-white bg-opacity-75 rounded-circle shadow-sm border-0"
                                                 type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots-vertical"></i>
+                                                <i class="bi bi-three-dots-vertical text-dark"></i>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
                                                 <li>
                                                     <a class="dropdown-item small btn-edit-category" href="#"
                                                         data-id="{{ $category->id }}"
@@ -400,24 +462,29 @@
                                                     <a class="dropdown-item small text-danger btn-delete-category"
                                                         href="#" data-id="{{ $category->id }}"
                                                         data-name="{{ $category->name }}">
-                                                        <i class="bi bi-trash me-2"></i>Delete Category
+                                                        <i class="bi bi-eye-slash me-2"></i>Hide Category
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
 
-                                    <div class="d-flex align-items-center justify-content-between pt-2 border-top">
-                                        <span class="small text-brand-orange fw-bold">
-                                            View Items <i class="bi bi-arrow-right ms-1"></i>
-                                        </span>
-                                        @if ($hasLowStock)
+                                    <!-- BOTTOM DETAILS -->
+                                    <div class="overlay-card-bottom">
+                                        <div class="card-title-text">{{ $category->name }}</div>
+                                        <div class="d-flex align-items-center justify-content-between mt-2">
                                             <span
-                                                class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill small">
-                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>Stock Alert
+                                                class="btn btn-sm btn-light btn-card-action text-dark fw-bold shadow-sm">
+                                                View Items <i class="bi bi-arrow-right ms-1"></i>
                                             </span>
-                                        @endif
+                                            @if ($hasLowStock)
+                                                <span class="badge bg-warning text-dark rounded-pill">
+                                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>Stock Alert
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         @endforeach
@@ -431,19 +498,17 @@
     <!-- ==================== SYSTEM MODALS ==================== -->
 
     <!-- LOW STOCK MODAL -->
-    <div class="modal fade" id="lowStockModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal fade modal-fixed-height" id="lowStockModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-warning text-dark p-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
-                        <h5 class="modal-title fw-bold">Low Stock Warning (< 20 Remaining)</h5>
-                    </div>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Low Stock
+                        Warning (&lt; 20 Remaining)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-0">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light text-muted small text-uppercase">
+                        <thead class="table-light text-muted small text-uppercase sticky-top" style="z-index: 1;">
                             <tr>
                                 <th class="ps-3">Product</th>
                                 <th>Category</th>
@@ -457,12 +522,12 @@
                                 <tr>
                                     <td class="ps-3 fw-bold text-brand-navy">{{ $p->name }}</td>
                                     <td><span
-                                            class="badge bg-light text-dark border">{{ $p->category->name ?? 'Unassigned' }}</span>
+                                            class="badge bg-light text-dark border rounded-pill">{{ $p->category->name ?? 'Unassigned' }}</span>
                                     </td>
                                     <td>₱{{ number_format($p->price, 2) }}</td>
                                     <td class="text-center"><span
-                                            class="badge bg-warning text-dark fw-bold">{{ $p->stock }} pcs</span>
-                                    </td>
+                                            class="badge bg-warning text-dark fw-bold rounded-pill">{{ $p->stock }}
+                                            pcs</span></td>
                                     <td class="text-end pe-3">
                                         <button class="btn btn-sm btn-brand-orange btn-trigger-restock"
                                             data-id="{{ $p->id }}" data-name="{{ $p->name }}"
@@ -485,19 +550,16 @@
     </div>
 
     <!-- OUT OF STOCK MODAL -->
-    <div class="modal fade" id="outOfStockModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal fade modal-fixed-height" id="outOfStockModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-danger text-white p-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-x-circle-fill fs-4"></i>
-                        <h5 class="modal-title fw-bold">Out of Stock Items (Action Required)</h5>
-                    </div>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-x-circle-fill me-2"></i>Out of Stock Items</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-0">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light text-muted small text-uppercase">
+                        <thead class="table-light text-muted small text-uppercase sticky-top" style="z-index: 1;">
                             <tr>
                                 <th class="ps-3">Product</th>
                                 <th>Category</th>
@@ -511,13 +573,13 @@
                                 <tr>
                                     <td class="ps-3 fw-bold text-brand-navy">{{ $p->name }}</td>
                                     <td><span
-                                            class="badge bg-light text-dark border">{{ $p->category->name ?? 'Unassigned' }}</span>
+                                            class="badge bg-light text-dark border rounded-pill">{{ $p->category->name ?? 'Unassigned' }}</span>
                                     </td>
                                     <td>₱{{ number_format($p->price, 2) }}</td>
-                                    <td class="text-center"><span class="badge bg-danger text-white fw-bold">0
-                                            pcs</span></td>
+                                    <td class="text-center"><span
+                                            class="badge bg-danger text-white fw-bold rounded-pill">0 pcs</span></td>
                                     <td class="text-end pe-3">
-                                        <button class="btn btn-sm btn-danger btn-trigger-restock"
+                                        <button class="btn btn-sm btn-danger rounded-pill btn-trigger-restock"
                                             data-id="{{ $p->id }}" data-name="{{ $p->name }}"
                                             data-qty="0">
                                             <i class="bi bi-plus-lg me-1"></i> Restock Now
@@ -537,9 +599,9 @@
         </div>
     </div>
 
-    <!-- CATEGORY PRODUCTS DRILL-DOWN MODAL -->
-    <div class="modal fade" id="categoryProductsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <!-- CATEGORY PRODUCTS MODAL (FULL OVERLAY CARDS WITH ACTION BUTTONS) -->
+    <div class="modal fade modal-fixed-height" id="categoryProductsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-brand-navy text-white p-3">
                     <div class="d-flex align-items-center gap-2">
@@ -547,39 +609,35 @@
                         <div>
                             <h5 class="modal-title fw-bold text-white mb-0" id="modalCategoryTitle">Category Products
                             </h5>
-                            <small class="modal-subheader-text">Manage inventory items for this section</small>
+                            <small class="text-white-50">Manage inventory items</small>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-brand-orange btn-sm rounded-2" id="btnAddNewProductModal">
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i
+                                    class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="productSearchInput"
+                                class="form-control bg-light border-start-0 rounded-end-pill ps-0"
+                                placeholder="Search product...">
+                        </div>
+                        <button class="btn btn-brand-orange btn-sm px-3" id="btnAddNewProductModal">
                             <i class="bi bi-plus-circle me-1"></i> Add New Product
                         </button>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                 </div>
-                <div class="modal-body p-0 custom-scroll" style="max-height: 60vh;">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" id="categoryProductsTable">
-                            <thead class="table-light text-muted small text-uppercase">
-                                <tr>
-                                    <th class="ps-3" style="width: 70px;">Image</th>
-                                    <th>Product Name</th>
-                                    <th>Price</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Stock Quantity</th>
-                                    <th class="text-end pe-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="categoryProductsList">
-                                <!-- Dynamic JS Render -->
-                            </tbody>
-                        </table>
+
+                <div class="modal-body p-4 bg-light custom-scroll">
+                    <!-- PRODUCT GRID CONTAINER -->
+                    <div class="row g-3" id="categoryProductsGrid">
+                        <!-- Dynamic JS Grid Render -->
                     </div>
+
                     <div id="emptyCategoryState" class="text-center py-5 d-none">
                         <i class="bi bi-box-seam display-4 text-muted d-block mb-2"></i>
-                        <h6 class="fw-bold text-secondary">No products found in this category</h6>
-                        <p class="small text-muted mb-3">Start by adding your first menu product to this section.</p>
-                        <button class="btn btn-brand-orange btn-sm" id="btnEmptyStateAddProd">
+                        <h6 class="fw-bold text-secondary">No active products found</h6>
+                        <p class="small text-muted mb-3">Start by adding your first product to this category.</p>
+                        <button class="btn btn-brand-orange btn-sm px-3" id="btnEmptyStateAddProd">
                             <i class="bi bi-plus-circle me-1"></i> Add Product Now
                         </button>
                     </div>
@@ -619,9 +677,10 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-brand-orange"><i class="bi bi-check-lg me-1"></i> Add
-                            Stock</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange px-4"><i class="bi bi-check-lg me-1"></i>
+                            Add Stock</button>
                     </div>
                 </form>
             </div>
@@ -649,14 +708,15 @@
                             <label class="form-label fw-semibold">Category Image</label>
                             <input type="file" name="image" class="form-control image-file-input"
                                 accept="image/*" data-preview="#addCategoryPreview">
-                            <div class="mt-2 text-center d-none" id="addCategoryPreviewContainer">
+                            <div class="mt-2 text-center d-none">
                                 <img id="addCategoryPreview" src="#" class="img-preview-box">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-brand-orange">Save Category</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange px-4">Save Category</button>
                     </div>
                 </form>
             </div>
@@ -692,32 +752,36 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-brand-orange">Update Category</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange px-4">Update Category</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- DELETE CATEGORY CONFIRMATION MODAL -->
+    <!-- DELETE CATEGORY MODAL -->
     <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-trash me-2"></i>Delete Category</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-eye-slash me-2"></i>Hide Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="deleteCategoryForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="modal-body p-4">
-                        <p class="mb-0">Are you sure you want to delete <strong id="deleteCategoryName"
-                                class="text-danger"></strong>? This will also remove all assigned products.</p>
+                        <p class="mb-0">Are you sure you want to hide <strong id="deleteCategoryName"
+                                class="text-brand-navy"></strong>? This will set its status to invisible on the menu.
+                        </p>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning text-dark rounded-pill px-4 font-weight-bold"><i
+                                class="bi bi-eye-slash me-1"></i> Confirm & Hide</button>
                     </div>
                 </form>
             </div>
@@ -749,7 +813,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Product Name</label>
                             <input type="text" name="name" class="form-control"
-                                placeholder="e.g. Iced Caramel Latte" required>
+                                placeholder="e.g. Salmon and Avocado Burger" required>
                         </div>
                         <div class="row">
                             <div class="col-6 mb-3">
@@ -766,14 +830,15 @@
                             <label class="form-label fw-semibold">Product Image</label>
                             <input type="file" name="image" class="form-control image-file-input"
                                 accept="image/*" data-preview="#addProductPreview">
-                            <div class="mt-2 text-center d-none" id="addProductPreviewContainer">
+                            <div class="mt-2 text-center d-none">
                                 <img id="addProductPreview" src="#" class="img-preview-box">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-brand-orange">Save Product</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange px-4">Save Product</button>
                     </div>
                 </form>
             </div>
@@ -793,6 +858,14 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Category / Section</label>
+                            <select name="category_id" id="editProductCategoryId" class="form-select" required>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Product Name</label>
                             <input type="text" id="editProductName" name="name" class="form-control" required>
@@ -820,8 +893,9 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-brand-orange">Update Product</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-brand-orange px-4">Update Product</button>
                     </div>
                 </form>
             </div>
@@ -832,285 +906,297 @@
     <div class="modal fade" id="deleteProductModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-trash me-2"></i>Delete Product</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-eye-slash me-2"></i>Hide Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="deleteProductForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="modal-body p-4">
-                        <p class="mb-0">Are you sure you want to delete <strong id="deleteProductName"
-                                class="text-danger"></strong>?</p>
+                        <p class="mb-0">Are you sure you want to hide <strong id="deleteProductName"
+                                class="text-brand-navy"></strong>? This will set its visibility to hidden on the
+                            Ordering Screen.</p>
                     </div>
                     <div class="modal-footer bg-light border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete Item</button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning text-dark rounded-pill px-4 font-weight-bold"><i
+                                class="bi bi-eye-slash me-1"></i> Confirm & Hide</button>
                     </div>
                 </form>
             </div>
         </div>
+
     </div>
 
-    <!-- JS Scripts -->
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const allProducts = @json($products);
-        let currentSelectedCategoryId = null;
+</body>
+<script>
+    const categoriesData = @json($categories);
+    const productsData = @json($products);
 
-        document.addEventListener('DOMContentLoaded', function() {
+    let activeCategoryId = null;
 
-            // 1. DYNAMIC CATEGORY SEARCH / FILTERING
-            const categorySearchInput = document.getElementById('categorySearchInput');
-            if (categorySearchInput) {
-                categorySearchInput.addEventListener('input', function() {
-                    const query = this.value.toLowerCase().trim();
-                    const categoryCols = document.querySelectorAll('.category-item-col');
+    document.addEventListener('DOMContentLoaded', function() {
 
-                    categoryCols.forEach(col => {
-                        const name = col.dataset.categoryName;
-                        if (name.includes(query)) {
-                            col.style.display = '';
-                        } else {
-                            col.style.display = 'none';
-                        }
-                    });
-                });
-            }
-
-            // 2. IMAGE PREVIEW HANDLER
-            document.querySelectorAll('.image-file-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const targetSelector = this.dataset.preview;
-                    const previewImg = document.querySelector(targetSelector);
-
-                    if (this.files && this.files[0] && previewImg) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            previewImg.src = e.target.result;
-                            const container = previewImg.closest('.d-none');
-                            if (container) container.classList.remove('d-none');
-                        };
-                        reader.readAsDataURL(this.files[0]);
-                    }
+        // 1. Live Category Search Filter
+        const searchInput = document.getElementById('categorySearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase().trim();
+                document.querySelectorAll('.category-item-col').forEach(col => {
+                    const name = col.getAttribute('data-category-name');
+                    col.classList.toggle('d-none', !name.includes(query));
                 });
             });
+        }
 
-            // 3. OPEN RESTOCK MODAL HANDLER
-            document.addEventListener('click', function(e) {
-                const restockTrigger = e.target.closest('.btn-trigger-restock, .btn-restock-modal');
-                if (restockTrigger) {
-                    // Hide parent modal active instances if opened inside another modal
-                    ['lowStockModal', 'outOfStockModal', 'categoryProductsModal'].forEach(id => {
-                        const modalEl = document.getElementById(id);
-                        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                        if (modalInstance) modalInstance.hide();
-                    });
-
-                    const productId = restockTrigger.dataset.id;
-                    const name = restockTrigger.dataset.name;
-                    const qty = restockTrigger.dataset.qty;
-
-                    document.getElementById('restockItemForm').action =
-                        `/admin/product/restock/${productId}`;
-                    document.getElementById('restockItemId').value = productId;
-                    document.getElementById('restockItemName').value = name;
-                    document.getElementById('restockCurrentQty').value = `${qty} pcs`;
-
-                    new bootstrap.Modal(document.getElementById('restockItemModal')).show();
-                }
-            });
-
-            // 4. VIEW CATEGORY PRODUCTS DRILL-DOWN HANDLER
-            document.querySelectorAll('.btn-view-category-products').forEach(card => {
-                card.addEventListener('click', function() {
-                    const catId = this.dataset.categoryId;
-                    const catName = this.dataset.categoryName;
-                    currentSelectedCategoryId = catId;
-
-                    document.getElementById('modalCategoryTitle').textContent =
-                        `${catName} Products`;
-                    document.getElementById('addProductCategoryId').value = catId;
-
-                    const dropdown = document.getElementById('addProductCategoryDropdown');
-                    if (dropdown) dropdown.value = catId;
-
-                    const categoryProds = allProducts.filter(p => p.category_id == catId);
-                    renderCategoryProductsTable(categoryProds);
-
-                    new bootstrap.Modal(document.getElementById('categoryProductsModal')).show();
+        // 2. Live Product Search Filter
+        const prodSearchInput = document.getElementById('productSearchInput');
+        if (prodSearchInput) {
+            prodSearchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase().trim();
+                document.querySelectorAll('#categoryProductsGrid .product-col').forEach(col => {
+                    const prodName = col.getAttribute('data-product-name') || '';
+                    col.classList.toggle('d-none', !prodName.includes(query));
                 });
             });
+        }
 
-            // 5. RENDER DYNAMIC PRODUCTS TABLE INSIDE MODAL
-            function renderCategoryProductsTable(productsList) {
-                const tbody = document.getElementById('categoryProductsList');
-                const emptyState = document.getElementById('emptyCategoryState');
-                const table = document.getElementById('categoryProductsTable');
+        // 3. Open Category Products Modal
+        document.querySelectorAll('.btn-view-category-products').forEach(card => {
+            card.addEventListener('click', function() {
+                activeCategoryId = this.getAttribute('data-category-id');
+                const categoryName = this.getAttribute('data-category-name');
 
-                tbody.innerHTML = '';
+                document.getElementById('modalCategoryTitle').innerText = categoryName +
+                    ' Products';
 
-                if (productsList.length === 0) {
-                    table.classList.add('d-none');
-                    emptyState.classList.remove('d-none');
-                    return;
-                }
+                if (prodSearchInput) prodSearchInput.value = '';
 
-                table.classList.remove('d-none');
+                renderCategoryProducts(activeCategoryId);
+
+                const catModal = new bootstrap.Modal(document.getElementById(
+                    'categoryProductsModal'));
+                catModal.show();
+            });
+        });
+
+        // 4. Render Category Products Grid (Fully Unified Overlay Style)
+        function renderCategoryProducts(catId) {
+            const gridContainer = document.getElementById('categoryProductsGrid');
+            const emptyState = document.getElementById('emptyCategoryState');
+
+            gridContainer.innerHTML = '';
+            const filteredProducts = productsData.filter(p => p.category_id == catId);
+
+            if (filteredProducts.length === 0) {
+                gridContainer.classList.add('d-none');
+                emptyState.classList.remove('d-none');
+            } else {
+                gridContainer.classList.remove('d-none');
                 emptyState.classList.add('d-none');
 
-                productsList.forEach(product => {
-                    let badgeClass, statusIcon, statusText, qtyClass, btnClass;
+                filteredProducts.forEach(product => {
+                    const imgUrl = product.image_path ? `/storage/${product.image_path}` :
+                        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=600&auto=format&fit=crop';
 
-                    if (product.stock <= 0) {
-                        badgeClass =
-                            'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
-                        statusIcon = 'bi-x-circle-fill';
-                        statusText = 'Out of Stock';
-                        qtyClass = 'text-danger';
-                        btnClass = 'btn-danger';
-                    } else if (product.stock < 20) {
-                        badgeClass =
-                            'bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25';
-                        statusIcon = 'bi-exclamation-triangle-fill';
-                        statusText = 'Low Stock';
-                        qtyClass = 'text-warning text-darken-2';
-                        btnClass = 'btn-brand-orange';
-                    } else {
-                        badgeClass =
-                            'bg-success bg-opacity-10 text-success border border-success border-opacity-25';
-                        statusIcon = 'bi-check-circle-fill';
-                        statusText = 'In Stock';
-                        qtyClass = 'text-brand-navy';
-                        btnClass = 'btn-outline-primary';
-                    }
+                    const col = document.createElement('div');
+                    col.className = 'col-12 col-sm-6 col-md-4 col-xl-3 product-col';
+                    col.setAttribute('data-product-name', product.name.toLowerCase());
 
-                    const imgTag = product.image_path ?
-                        `<img src="/storage/${product.image_path}" class="rounded-2 border" style="width: 44px; height: 44px; object-fit: cover;">` :
-                        `<div class="bg-light text-secondary rounded-2 border d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;"><i class="bi bi-box-seam fs-5"></i></div>`;
+                    col.innerHTML = `
+                            <div class="overlay-card product-overlay-card" style="background-image: url('${imgUrl}');">
+                                <!-- TOP BADGE AND DROPDOWN MENU -->
+                                <div class="overlay-card-top">
+                                    <span class="badge ${product.stock <= 0 ? 'bg-danger' : (product.stock < 20 ? 'bg-warning text-dark' : 'bg-success')} rounded-pill px-2.5 py-1.5">
+                                        ${product.stock <= 0 ? 'Out of Stock' : product.stock + ' left'}
+                                    </span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-light bg-white bg-opacity-75 rounded-circle shadow-sm border-0" type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical text-dark"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                                            <li>
+                                                <a class="dropdown-item small btn-edit-product-action" href="#" data-id="${product.id}">
+                                                    <i class="bi bi-pencil text-primary me-2"></i>Edit Product
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item small text-danger btn-delete-product-action" href="#" data-id="${product.id}" data-name="${product.name}">
+                                                    <i class="bi bi-eye-slash me-2"></i>Hide Product
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="ps-3">${imgTag}</td>
-                        <td class="fw-bold text-brand-navy">${product.name}</td>
-                        <td class="fw-semibold">₱${parseFloat(product.price).toFixed(2)}</td>
-                        <td><span class="status-badge ${badgeClass}"><i class="bi ${statusIcon} me-1"></i>${statusText}</span></td>
-                        <td class="text-center"><div class="fw-bold ${qtyClass}">${product.stock} pcs</div></td>
-                        <td class="text-end pe-3">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn ${btnClass} btn-restock-modal me-1 rounded-1" data-id="${product.id}" data-name="${product.name}" data-qty="${product.stock}">
-                                    <i class="bi bi-plus-lg"></i> Restock
-                                </button>
-                                <button class="btn btn-outline-secondary btn-edit-modal me-1 rounded-1" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-qty="${product.stock}" data-img="${product.image_path ? '/storage/' + product.image_path : ''}">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-delete-modal rounded-1" data-id="${product.id}" data-name="${product.name}">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <!-- BOTTOM DETAILS & MANAGEMENT ACTIONS -->
+                                <div class="overlay-card-bottom">
+                                    <div class="card-title-text">${product.name}</div>
+                                    <div class="card-subtitle-text">₱${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-brand-orange btn-card-action flex-grow-1 btn-trigger-restock" data-id="${product.id}" data-name="${product.name}" data-qty="${product.stock}">
+                                            <i class="bi bi-plus-circle me-1"></i> Restock
+                                        </button>
+                                        <button class="btn btn-light bg-white bg-opacity-80 text-dark border-0 btn-card-action btn-edit-product-action" data-id="${product.id}">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+                        `;
+                    gridContainer.appendChild(col);
                 });
             }
+        }
 
-            // 6. ADD NEW PRODUCT TRIGGERS
-            function openAddProductModal() {
-                const catModalEl = document.getElementById('categoryProductsModal');
-                const modalInstance = bootstrap.Modal.getInstance(catModalEl);
-                if (modalInstance) modalInstance.hide();
+        // 5. Trigger Add Product Modal
+        const triggerAddProduct = () => {
+            if (!activeCategoryId) return;
+            document.getElementById('addProductCategoryId').value = activeCategoryId;
+            document.getElementById('addProductCategoryDropdown').value = activeCategoryId;
 
-                new bootstrap.Modal(document.getElementById('addProductModal')).show();
+            const addModal = new bootstrap.Modal(document.getElementById('addProductModal'));
+            addModal.show();
+        };
+
+        document.getElementById('btnAddNewProductModal').addEventListener('click', triggerAddProduct);
+        document.getElementById('btnEmptyStateAddProd').addEventListener('click', triggerAddProduct);
+
+        // 6. Restock Bridge
+        document.addEventListener('click', function(e) {
+            const restockBtn = e.target.closest('.btn-trigger-restock');
+            if (restockBtn) {
+                e.preventDefault();
+                const id = restockBtn.getAttribute('data-id');
+                const name = restockBtn.getAttribute('data-name');
+                const qty = restockBtn.getAttribute('data-qty');
+
+                document.getElementById('restockItemId').value = id;
+                document.getElementById('restockItemName').value = name;
+                document.getElementById('restockCurrentQty').value = qty + ' pcs';
+                document.getElementById('restockItemForm').action = `/admin/products/${id}/restock`;
+
+                ['lowStockModal', 'outOfStockModal', 'categoryProductsModal'].forEach(mId => {
+                    const instance = bootstrap.Modal.getInstance(document.getElementById(mId));
+                    if (instance) instance.hide();
+                });
+
+                new bootstrap.Modal(document.getElementById('restockItemModal')).show();
             }
+        });
 
-            document.getElementById('btnAddNewProductModal').addEventListener('click', openAddProductModal);
-            document.getElementById('btnEmptyStateAddProd').addEventListener('click', openAddProductModal);
+        // 7. Image Previews
+        document.querySelectorAll('.image-file-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const previewImg = document.querySelector(this.getAttribute('data-preview'));
+                const file = this.files[0];
 
-            // 7. EDIT CATEGORY HANDLER
-            document.querySelectorAll('.btn-edit-category').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    const img = this.dataset.img;
-
-                    document.getElementById('editCategoryForm').action = `/admin/categories/${id}`;
-                    document.getElementById('editCategoryName').value = name;
-
-                    const imgPreview = document.getElementById('editCategoryImgPreview');
-                    const imgWrapper = document.getElementById('editCategoryImgWrapper');
-
-                    if (img) {
-                        imgPreview.src = img;
-                        imgWrapper.classList.remove('d-none');
-                    } else {
-                        imgWrapper.classList.add('d-none');
-                    }
-
-                    new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
-                });
+                if (file && previewImg) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        previewImg.src = e.target.result;
+                        const container = previewImg.closest('div');
+                        if (container) container.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
+        });
 
-            // 8. DELETE CATEGORY HANDLER
-            document.querySelectorAll('.btn-delete-category').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
+        // 8. Edit Category Setup
+        document.querySelectorAll('.btn-edit-category').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const img = this.getAttribute('data-img');
 
-                    document.getElementById('deleteCategoryForm').action =
-                        `/admin/categories/${id}`;
-                    document.getElementById('deleteCategoryName').textContent = name;
+                document.getElementById('editCategoryName').value = name;
+                document.getElementById('editCategoryForm').action =
+                    `/admin/categories/${id}/update`;
 
-                    new bootstrap.Modal(document.getElementById('deleteCategoryModal')).show();
-                });
+                const imgPreview = document.getElementById('editCategoryImgPreview');
+                if (img) {
+                    imgPreview.src = img;
+                    document.getElementById('editCategoryImgWrapper').classList.remove(
+                        'd-none');
+                } else {
+                    document.getElementById('editCategoryImgWrapper').classList.add('d-none');
+                }
+
+                new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
             });
+        });
 
-            // 9. EDIT / DELETE PRODUCT HANDLERS INSIDE MODAL
-            document.addEventListener('click', function(e) {
-                const editBtn = e.target.closest('.btn-edit-modal');
-                if (editBtn) {
-                    const catModalEl = document.getElementById('categoryProductsModal');
-                    const catModalInstance = bootstrap.Modal.getInstance(catModalEl);
-                    if (catModalInstance) catModalInstance.hide();
+        // 9. Delete Category Setup
+        document.querySelectorAll('.btn-delete-category').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('data-id');
+                document.getElementById('deleteCategoryName').innerText = this.getAttribute(
+                    'data-name');
+                document.getElementById('deleteCategoryForm').action =
+                    `/admin/categories/${id}/delete`;
 
-                    const id = editBtn.dataset.id;
-                    const img = editBtn.dataset.img;
+                new bootstrap.Modal(document.getElementById('deleteCategoryModal')).show();
+            });
+        });
 
-                    document.getElementById('editProductForm').action = `/admin/product/update/${id}`;
-                    document.getElementById('editProductName').value = editBtn.dataset.name;
-                    document.getElementById('editProductPrice').value = editBtn.dataset.price;
-                    document.getElementById('editProductStock').value = editBtn.dataset.qty;
+        // 10. Product Actions Delegation
+        document.getElementById('categoryProductsGrid').addEventListener('click', function(e) {
+            const editBtn = e.target.closest('.btn-edit-product-action');
+            const deleteBtn = e.target.closest('.btn-delete-product-action');
+
+            if (editBtn) {
+                e.preventDefault();
+                const id = editBtn.getAttribute('data-id');
+                const product = productsData.find(p => p.id == id);
+                if (product) {
+                    document.getElementById('editProductCategoryId').value = product.category_id;
+                    document.getElementById('editProductName').value = product.name;
+                    document.getElementById('editProductPrice').value = product.price;
+                    document.getElementById('editProductStock').value = product.stock;
+                    document.getElementById('editProductForm').action = `/admin/products/${id}/update`;
 
                     const imgPreview = document.getElementById('editProductImgPreview');
-                    const imgWrapper = document.getElementById('editProductImgWrapper');
-
-                    if (img) {
-                        imgPreview.src = img;
-                        imgWrapper.classList.remove('d-none');
+                    if (product.image_path) {
+                        imgPreview.src = `/storage/${product.image_path}`;
+                        document.getElementById('editProductImgWrapper').classList.remove('d-none');
                     } else {
-                        imgWrapper.classList.add('d-none');
+                        document.getElementById('editProductImgWrapper').classList.add('d-none');
                     }
 
                     new bootstrap.Modal(document.getElementById('editProductModal')).show();
                 }
+            }
 
-                const deleteBtn = e.target.closest('.btn-delete-modal');
-                if (deleteBtn) {
-                    const catModalEl = document.getElementById('categoryProductsModal');
-                    const catModalInstance = bootstrap.Modal.getInstance(catModalEl);
-                    if (catModalInstance) catModalInstance.hide();
+            if (deleteBtn) {
+                e.preventDefault();
+                const id = deleteBtn.getAttribute('data-id');
+                document.getElementById('deleteProductName').innerText = deleteBtn.getAttribute(
+                    'data-name');
+                document.getElementById('deleteProductForm').action = `/admin/products/${id}/delete`;
 
-                    const id = deleteBtn.dataset.id;
-                    document.getElementById('deleteProductForm').action = `/admin/product/delete/${id}`;
-                    document.getElementById('deleteProductName').textContent = deleteBtn.dataset.name;
-
-                    new bootstrap.Modal(document.getElementById('deleteProductModal')).show();
-                }
-            });
-
+                new bootstrap.Modal(document.getElementById('deleteProductModal')).show();
+            }
         });
-    </script>
+
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toastElements = document.querySelectorAll('.toast-container .toast');
+        toastElements.forEach(toastEl => {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    });
+</script>
 </body>
 
 </html>

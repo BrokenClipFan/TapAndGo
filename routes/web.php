@@ -20,14 +20,14 @@ Route::get('/ticket/{order}', TicketController::class)->name('ticket');
 Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::post('/admin/category/store', [CategoryController::class, 'store'])->name('admin.category.store');
-    Route::put('/admin/category/update/{category}', [CategoryController::class, 'update'])->name('admin.category.update');
-    Route::delete('/admin/category/delete/{category}', [CategoryController::class, 'destroy'])->name('admin.category.delete');
+    Route::post('/admin/categories/store', [CategoryController::class, 'store'])->name('admin.category.store');
+    Route::put('/admin/categories/{category}/update', [CategoryController::class, 'update'])->name('admin.category.update');
+    Route::delete('/admin/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('admin.category.delete');
 
-    Route::post('/admin/product/store', [ProductController::class, 'store'])->name('admin.product.store');
-    Route::put('/admin/product/update/{product}', [ProductController::class, 'update'])->name('admin.product.update');
-    Route::delete('/admin/product/delete/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
-    Route::put('/admin/product/restock/{product}', [ProductController::class, 'restock'])->name('admin.product.restock');
+    Route::post('/admin/products/store', [ProductController::class, 'store'])->name('admin.product.store');
+    Route::put('/admin/products/{product}/update/', [ProductController::class, 'update'])->name('admin.product.update');
+    Route::delete('/admin/products/{product}/delete', [ProductController::class, 'destroy'])->name('admin.product.destroy');
+    Route::put('/admin/products/{product}/restock', [ProductController::class, 'restock'])->name('admin.product.restock');
 });
 
 

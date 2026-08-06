@@ -19,8 +19,6 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         html,
@@ -71,20 +69,16 @@
 </head>
 
 <body class="bg-slate-50 flex flex-col h-screen w-screen relative">
-
+    @include('partials.splash-screen', [
+        'title' => 'Tap&Go',
+        'subtitle' => 'Order Terminal',
+    ])
     <!-- SCREEN 1: WELCOME SCREEN -->
     <div id="screen-welcome"
-        class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#1a4373] z-50 flex flex-col justify-between p-8 transition-all duration-500">
+        class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1a4373] to-[#0f172a] z-50 flex flex-col justify-between p-8 transition-all duration-500">
         <div class="flex justify-between items-center w-full">
             <div class="flex items-center gap-3">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                    <i class="bi bi-lightning-fill text-white text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-white text-xl font-extrabold tracking-wider">TapAndGo</h1>
-                    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest">Self-Service Express</p>
-                </div>
+                <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="h-12 object-contain">
             </div>
             <div
                 class="bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-4 py-1.5 text-xs text-slate-300 font-semibold">
@@ -94,15 +88,15 @@
 
         <div class="text-center my-auto flex flex-col items-center">
             <div
-                class="w-32 h-32 rounded-full bg-orange-500/10 border-2 border-orange-500/30 flex items-center justify-center pulse-accent mb-6">
+                class="w-36 h-36 rounded-full bg-orange-500/10 border-2 border-orange-500/30 flex items-center justify-center pulse-accent mb-6">
                 <div
-                    class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/40">
-                    <i class="bi bi-hand-index-thumb text-white text-4xl"></i>
+                    class="w-28 h-28 rounded-full bg-[#1a4373] flex items-center justify-center shadow-lg shadow-orange-500/20 border-2 border-orange-500/40 p-2">
+                    <img src="{{ asset('Logo.png') }}" alt="Tap&Go" class="w-full h-full object-contain">
                 </div>
             </div>
-            <h2 class="text-white text-4xl sm:text-5xl font-black mb-3 leading-tight tracking-tight">Gourmet
-                Meals,<br>Delivered in a Flash!</h2>
-            <p class="text-slate-400 text-sm sm:text-base max-w-md mx-auto mb-10">Tap below to select your ordering
+            <h2 class="text-white text-4xl sm:text-5xl font-black mb-3 leading-tight tracking-tight">Order Food in a
+                Flash!</h2>
+            <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-10">Tap below to select your ordering
                 method and get started.</p>
 
             <div class="flex flex-col sm:flex-row gap-6 w-full max-w-xl justify-center">
@@ -128,7 +122,7 @@
         </div>
 
         <div class="text-center w-full">
-            <p class="text-slate-500 text-xs font-semibold">Touch a button to begin • Station ID: #K-01</p>
+            <p class="text-slate-400 text-xs font-semibold">Touch a button to begin • Station ID: #K-01</p>
         </div>
     </div>
 
@@ -136,15 +130,16 @@
     <div class="flex-grow flex flex-col h-full w-full min-h-0 bg-slate-50">
 
         <!-- Header Ribbon -->
-        <header class="bg-[#1a4373] text-white flex-shrink-0 px-6 py-4 flex justify-between items-center shadow-md">
-            <div class="flex items-center gap-3">
+        <header class="bg-[#1a4373] text-white flex-shrink-0 px-6 py-3 flex justify-between items-center shadow-md">
+            <div class="flex items-center gap-4">
                 <button onclick="resetToWelcome()"
                     class="kiosk-btn-active bg-white/10 hover:bg-white/20 text-white rounded-xl p-2.5">
                     <i class="bi bi-arrow-left-square-fill text-xl"></i>
                 </button>
-                <div>
+                <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="h-10 object-contain">
+                <div class="border-l border-white/20 pl-4">
                     <h3 class="font-extrabold text-base tracking-wide flex items-center gap-1.5">
-                        <span>TapAndGo Order Screen</span>
+                        <span>Order Screen</span>
                         <span id="kiosk-order-type-badge"
                             class="bg-orange-500 text-[10px] uppercase font-black px-2 py-0.5 rounded-full">Dine
                             In</span>
@@ -194,7 +189,7 @@
                     {{ $categories->first()->name ?? 'Products' }}
                 </h4>
 
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Populated dynamically via JS -->
                 </div>
             </main>
@@ -281,7 +276,6 @@
                 <p id="modal-error-message" class="text-xs text-slate-500 mb-4">Some items in your order are currently
                     unavailable or exceed available stock.</p>
 
-                <!-- Dynamic List Container -->
                 <div id="modal-item-list-container"
                     class="hidden mb-6 bg-red-50 border border-red-100 rounded-2xl p-4 text-left max-h-40 overflow-y-auto kiosk-scroll">
                     <span class="text-[10px] font-black uppercase text-red-500 tracking-wider block mb-2">Unavailable /
@@ -321,6 +315,11 @@
                 const firstCategory = categoriesData.find(c => c.id === activeCategoryId);
                 filterCategory(activeCategoryId, firstCategory ? firstCategory.name : 'Products');
             }
+        }
+
+        function resetToWelcome() {
+            const welcomeScreen = document.getElementById('screen-welcome');
+            welcomeScreen.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
         }
 
         function showUnavailableModal(items = [], title = "Stock Limit Reached", message = null) {
@@ -387,14 +386,17 @@
             filteredProducts.forEach(prod => {
                 const card = document.createElement('div');
                 card.className =
-                    "bg-white border border-slate-200 rounded-3xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-orange-200 transition-all relative overflow-hidden";
+                    "relative h-72 rounded-3xl overflow-hidden shadow-lg border border-slate-800/20 bg-slate-900 flex flex-col justify-between p-4 transition-transform duration-200 active:scale-[0.98]";
 
                 const imageSrc = prod.image_path ? `/storage/${prod.image_path}` : null;
                 const isOutOfStock = prod.stock <= 0;
                 const isStatusUnavailable = prod.status && prod.status.toLowerCase() !== 'available';
                 const isDisabled = isOutOfStock || isStatusUnavailable;
 
-                let buttonLabel = 'Add';
+                const cartItem = cart.find(item => item.id === prod.id);
+                const inCartQty = cartItem ? cartItem.qty : 0;
+
+                let buttonLabel = 'Add to Tray';
                 if (isStatusUnavailable) {
                     buttonLabel = 'Unavailable';
                 } else if (isOutOfStock) {
@@ -402,35 +404,58 @@
                 }
 
                 card.innerHTML = `
-                    <div>
-                        <div class="w-full h-48 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-3.5 overflow-hidden relative">
-                            ${imageSrc 
-                                ? `<img src="${imageSrc}" class="w-full h-full object-cover rounded-2xl ${isDisabled ? 'grayscale opacity-60' : ''}" alt="${prod.name}">` 
-                                : `<i class="bi bi-fast-front text-6xl text-[#1a4373] ${isDisabled ? 'opacity-40' : ''}"></i>`
-                            }
-                            
-                            ${isDisabled ? `
-                                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-2">
-                                        <span class="bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-red-400/50 flex items-center gap-1">
-                                            <i class="bi bi-slash-circle-fill"></i>
-                                            ${isStatusUnavailable ? 'Not Available' : 'Out of Stock'}
-                                        </span>
-                                    </div>
-                                ` : ''}
-                        </div>
-                        <h5 class="font-extrabold text-slate-900 text-sm mb-1 line-clamp-1">${prod.name}</h5>
-                        <p class="text-slate-400 text-xs mb-3 line-clamp-1">
-                            Stock: ${prod.stock} ${prod.status ? `• <span class="capitalize ${isStatusUnavailable ? 'text-red-500 font-bold' : 'text-emerald-600'}">${prod.status}</span>` : ''}
-                        </p>
+                    <!-- Background Image -->
+                    <div class="absolute inset-0 z-0 bg-slate-800">
+                        ${imageSrc 
+                            ? `<img src="${imageSrc}" class="w-full h-full object-cover ${isDisabled ? 'grayscale opacity-50' : ''}" alt="${prod.name}">` 
+                            : `<div class="w-full h-full flex flex-col items-center justify-center text-slate-600 bg-slate-900"><i class="bi bi-cup-hot-fill text-6xl"></i></div>`
+                        }
+                        <!-- Bottom Gradient Overlay for text readability -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
-                        <span class="text-[#1a4373] text-lg font-black">₱${parseFloat(prod.price).toFixed(2)}</span>
-                        <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" 
-                            class="kiosk-btn-active ${isDisabled ? 'bg-slate-300 opacity-70 cursor-not-allowed shadow-none' : 'bg-orange-500 hover:bg-orange-600 shadow-md shadow-orange-500/10'} text-white rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wide flex items-center gap-1 transition-all"
-                            ${isDisabled ? 'disabled' : ''}>
-                            <i class="bi ${isDisabled ? 'bi-x-circle' : 'bi-plus-circle'}"></i>
-                            <span>${buttonLabel}</span>
-                        </button>
+
+                    <!-- Top Header: Stock Tag -->
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-1 rounded-full shadow-md tracking-tight flex items-center gap-1">
+                            ${prod.stock} left
+                        </span>
+                        
+                        ${isDisabled ? `
+                                                <span class="bg-red-500 border border-red-400 text-white font-extrabold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full shadow-lg">
+                                                    ${isStatusUnavailable ? 'Unavailable' : 'Sold Out'}
+                                                </span>
+                                            ` : ''}
+                    </div>
+
+                    <!-- Bottom Content Area -->
+                    <div class="relative z-10 space-y-2 mt-auto">
+                        <div>
+                            <h5 class="text-white font-extrabold text-xl leading-tight drop-shadow-md line-clamp-1">${prod.name}</h5>
+                            <p class="text-amber-400 font-black text-lg drop-shadow-sm">₱${parseFloat(prod.price).toFixed(2)}</p>
+                        </div>
+
+                        <div class="pt-1">
+                            ${inCartQty > 0 && !isDisabled ? `
+                                                    <!-- Quantity Controller Bar when item added -->
+                                                    <div class="flex items-center justify-between bg-white text-slate-900 rounded-2xl p-1 shadow-xl">
+                                                        <button onclick="updateCartQty(${prod.id}, -1)" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-black text-lg text-slate-700 active:scale-95 transition-all">
+                                                            <i class="bi bi-dash"></i>
+                                                        </button>
+                                                        <span class="font-black text-base text-slate-900 px-2">${inCartQty} in tray</span>
+                                                        <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-lg active:scale-95 transition-all shadow-md shadow-orange-500/30">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                ` : `
+                                                    <!-- Default Add Button -->
+                                                    <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" 
+                                                        class="kiosk-btn-active w-full ${isDisabled ? 'bg-slate-700/80 text-slate-400 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30'} font-extrabold py-3.5 px-4 rounded-2xl text-sm flex items-center justify-center gap-2 transition-all"
+                                                        ${isDisabled ? 'disabled' : ''}>
+                                                        <i class="bi ${isDisabled ? 'bi-slash-circle-fill' : 'bi-plus-circle-fill text-lg'}"></i>
+                                                        <span>${buttonLabel}</span>
+                                                    </button>
+                                                `}
+                        </div>
                     </div>
                 `;
                 productGrid.appendChild(card);
@@ -462,6 +487,10 @@
                 });
             }
             updateCartUI();
+            if (activeCategoryId) {
+                const currentCat = categoriesData.find(c => c.id === activeCategoryId);
+                filterCategory(activeCategoryId, currentCat ? currentCat.name : 'Products');
+            }
         }
 
         function updateCartQty(id, delta) {
@@ -481,6 +510,10 @@
                 }
             }
             updateCartUI();
+            if (activeCategoryId) {
+                const currentCat = categoriesData.find(c => c.id === activeCategoryId);
+                filterCategory(activeCategoryId, currentCat ? currentCat.name : 'Products');
+            }
         }
 
         function updateCartUI() {

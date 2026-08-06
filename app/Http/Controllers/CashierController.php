@@ -76,6 +76,7 @@ class CashierController extends Controller
             
             $excludedItems = [];
             $items = [];
+            $totalDue = 0;
             
             foreach($validated['items'] as $item){
 
@@ -105,14 +106,18 @@ class CashierController extends Controller
                     $product->status = 'out of stock';
                 }
 
+                $total = $item['quantity'] * $product->price;
+
                 $items[] = [
                     'order_id' => $order->id,
                     'name' => $product->name,
                     'product_id' => $product->id,
                     'quantity' => $item['product_id'],
                     'price' => $product->price,
-                    'total' => $item['quantity'] * $product->price,
+                    'total' => $total,
                 ];
+
+                $totalDue = $totalDue + $total;
 
                 $product->stock = $remainingStock;
                 $product->save();
@@ -128,16 +133,13 @@ class CashierController extends Controller
             
             DB::commit();
 
-            return view('cashier.receipt', compact('order', 'items', 'excludedItems'))->with('success', 'Checkout Successfull');
+            return view('cashier.receipt', compact('order', 'items', 'excludedItems', 'totalDue'))->with('success', 'Checkout Successfull');
 
         } catch(\Exception $e) {
             DB::rollBack();
 
             return redirect()->route('cashier')->with('error', $e->getMessage());
         }
-
-        return redirect()->route('cashier')->with('success', 'Checkout Successfull');
-        
     }
 
     public function cancelledOrder(Request $request) {
