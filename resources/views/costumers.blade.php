@@ -182,14 +182,31 @@
                 @endforeach
             </aside>
 
-            <!-- Dynamic Product Grid -->
-            <main class="flex-grow p-6 overflow-y-auto kiosk-scroll">
-                <h4 id="category-title"
-                    class="text-slate-900 font-extrabold text-lg mb-4 uppercase tracking-wider border-b pb-2 border-slate-200">
-                    {{ $categories->first()->name ?? 'Products' }}
-                </h4>
+            <!-- Dynamic Product Area -->
+            <main class="flex-grow p-6 overflow-y-auto kiosk-scroll flex flex-col">
+                <!-- Header & Search Input -->
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 border-b pb-3 border-slate-200">
+                    <h4 id="category-title" class="text-slate-900 font-extrabold text-lg uppercase tracking-wider">
+                        {{ $categories->first()->name ?? 'Products' }}
+                    </h4>
 
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <!-- Search Box -->
+                    <div class="relative w-full md:w-72">
+                        <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="kiosk-search-input" onkeyup="handleSearchInput()"
+                            placeholder="Search food items..."
+                            class="w-full bg-white text-slate-800 text-xs font-semibold pl-9 pr-8 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 shadow-sm transition-all">
+                        <button id="clear-search-btn" onclick="clearSearchInput()"
+                            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <i class="bi bi-x-circle-fill text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Grid (Portrait Items) -->
+                <div id="product-grid"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <!-- Populated dynamically via JS -->
                 </div>
             </main>
@@ -299,6 +316,7 @@
 
         let currentOrderType = "Dine In";
         let activeCategoryId = categoriesData.length > 0 ? categoriesData[0].id : null;
+        let searchQuery = "";
         let cart = [];
 
         function selectOrderType(type) {
@@ -311,10 +329,7 @@
                 welcomeScreen.classList.add('hidden');
             }, 500);
 
-            if (activeCategoryId) {
-                const firstCategory = categoriesData.find(c => c.id === activeCategoryId);
-                filterCategory(activeCategoryId, firstCategory ? firstCategory.name : 'Products');
-            }
+            renderCurrentView();
         }
 
         function resetToWelcome() {
@@ -352,6 +367,28 @@
             document.getElementById('modal-unavailable').classList.add('hidden');
         }
 
+        function handleSearchInput() {
+            const input = document.getElementById('kiosk-search-input');
+            const clearBtn = document.getElementById('clear-search-btn');
+            searchQuery = input.value.trim().toLowerCase();
+
+            if (searchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            renderCurrentView();
+        }
+
+        function clearSearchInput() {
+            const input = document.getElementById('kiosk-search-input');
+            input.value = '';
+            searchQuery = '';
+            document.getElementById('clear-search-btn').classList.add('hidden');
+            renderCurrentView();
+        }
+
         function filterCategory(categoryId, categoryName) {
             activeCategoryId = categoryId;
 
@@ -366,18 +403,29 @@
                 activeTab.classList.add('bg-orange-500', 'text-white');
             }
 
-            document.getElementById('category-title').innerText = categoryName;
+            renderCurrentView();
+        }
 
+        function renderCurrentView() {
             const productGrid = document.getElementById('product-grid');
             productGrid.innerHTML = '';
 
-            const filteredProducts = productsData.filter(prod => prod.category_id == categoryId);
+            let filteredProducts = productsData;
+
+            if (searchQuery.length > 0) {
+                document.getElementById('category-title').innerText = `Search Results (${searchQuery})`;
+                filteredProducts = filteredProducts.filter(prod => prod.name.toLowerCase().includes(searchQuery));
+            } else {
+                const currentCat = categoriesData.find(c => c.id === activeCategoryId);
+                document.getElementById('category-title').innerText = currentCat ? currentCat.name : 'Products';
+                filteredProducts = filteredProducts.filter(prod => prod.category_id == activeCategoryId);
+            }
 
             if (filteredProducts.length === 0) {
                 productGrid.innerHTML = `
                     <div class="col-span-full text-center py-12 text-slate-400">
                         <i class="bi bi-box-seam text-4xl block mb-2"></i>
-                        <p class="text-sm font-semibold">No products available in this category.</p>
+                        <p class="text-sm font-semibold">No products found.</p>
                     </div>
                 `;
                 return;
@@ -385,8 +433,9 @@
 
             filteredProducts.forEach(prod => {
                 const card = document.createElement('div');
+                // Portrait orientation aspect ratio (aspect-[3/4])
                 card.className =
-                    "relative h-72 rounded-3xl overflow-hidden shadow-lg border border-slate-800/20 bg-slate-900 flex flex-col justify-between p-4 transition-transform duration-200 active:scale-[0.98]";
+                    "relative aspect-[3/4] rounded-3xl overflow-hidden shadow-lg border-slate-800/20 bg-slate-900 flex flex-col justify-between p-3.5 transition-transform duration-200 active:scale-[0.98]";
 
                 const imageSrc = prod.image_path ? `/storage/${prod.image_path}` : null;
                 const isOutOfStock = prod.stock <= 0;
@@ -396,11 +445,11 @@
                 const cartItem = cart.find(item => item.id === prod.id);
                 const inCartQty = cartItem ? cartItem.qty : 0;
 
-                let buttonLabel = 'Add to Tray';
+                let buttonLabel = 'Add';
                 if (isStatusUnavailable) {
                     buttonLabel = 'Unavailable';
                 } else if (isOutOfStock) {
-                    buttonLabel = 'Out of Stock';
+                    buttonLabel = 'Sold Out';
                 }
 
                 card.innerHTML = `
@@ -408,53 +457,51 @@
                     <div class="absolute inset-0 z-0 bg-slate-800">
                         ${imageSrc 
                             ? `<img src="${imageSrc}" class="w-full h-full object-cover ${isDisabled ? 'grayscale opacity-50' : ''}" alt="${prod.name}">` 
-                            : `<div class="w-full h-full flex flex-col items-center justify-center text-slate-600 bg-slate-900"><i class="bi bi-cup-hot-fill text-6xl"></i></div>`
+                            : `<div class="w-full h-full flex flex-col items-center justify-center text-slate-600 bg-slate-900"><i class="bi bi-cup-hot-fill text-5xl"></i></div>`
                         }
-                        <!-- Bottom Gradient Overlay for text readability -->
+                        <!-- Gradient Overlay -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>
                     </div>
 
-                    <!-- Top Header: Stock Tag -->
-                    <div class="relative z-10 flex justify-between items-start">
-                        <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-1 rounded-full shadow-md tracking-tight flex items-center gap-1">
+                    <!-- Top Tags -->
+                    <div class="relative z-10 flex justify-between items-start gap-1">
+                        <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-2.5 py-0.5 rounded-full shadow tracking-tight flex items-center gap-1">
                             ${prod.stock} left
                         </span>
                         
                         ${isDisabled ? `
-                                                <span class="bg-red-500 border border-red-400 text-white font-extrabold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full shadow-lg">
-                                                    ${isStatusUnavailable ? 'Unavailable' : 'Sold Out'}
-                                                </span>
-                                            ` : ''}
+                                <span class="bg-red-500 border border-red-400 text-white font-extrabold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-md">
+                                    ${isStatusUnavailable ? 'Unavailable' : 'Sold Out'}
+                                </span>
+                            ` : ''}
                     </div>
 
-                    <!-- Bottom Content Area -->
-                    <div class="relative z-10 space-y-2 mt-auto">
+                    <!-- Bottom Details & Actions -->
+                    <div class="relative z-10 space-y-1.5 mt-auto">
                         <div>
-                            <h5 class="text-white font-extrabold text-xl leading-tight drop-shadow-md line-clamp-1">${prod.name}</h5>
-                            <p class="text-amber-400 font-black text-lg drop-shadow-sm">₱${parseFloat(prod.price).toFixed(2)}</p>
+                            <h5 class="text-white font-extrabold text-sm sm:text-base leading-tight drop-shadow-md line-clamp-1">${prod.name}</h5>
+                            <p class="text-amber-400 font-black text-xs sm:text-sm drop-shadow-sm">₱${parseFloat(prod.price).toFixed(2)}</p>
                         </div>
 
-                        <div class="pt-1">
+                        <div class="pt-0.5">
                             ${inCartQty > 0 && !isDisabled ? `
-                                                    <!-- Quantity Controller Bar when item added -->
-                                                    <div class="flex items-center justify-between bg-white text-slate-900 rounded-2xl p-1 shadow-xl">
-                                                        <button onclick="updateCartQty(${prod.id}, -1)" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-black text-lg text-slate-700 active:scale-95 transition-all">
-                                                            <i class="bi bi-dash"></i>
-                                                        </button>
-                                                        <span class="font-black text-base text-slate-900 px-2">${inCartQty} in tray</span>
-                                                        <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-lg active:scale-95 transition-all shadow-md shadow-orange-500/30">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                ` : `
-                                                    <!-- Default Add Button -->
-                                                    <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" 
-                                                        class="kiosk-btn-active w-full ${isDisabled ? 'bg-slate-700/80 text-slate-400 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30'} font-extrabold py-3.5 px-4 rounded-2xl text-sm flex items-center justify-center gap-2 transition-all"
-                                                        ${isDisabled ? 'disabled' : ''}>
-                                                        <i class="bi ${isDisabled ? 'bi-slash-circle-fill' : 'bi-plus-circle-fill text-lg'}"></i>
-                                                        <span>${buttonLabel}</span>
-                                                    </button>
-                                                `}
+                                    <div class="flex items-center justify-between bg-white text-slate-900 rounded-xl p-1 shadow-lg">
+                                        <button onclick="updateCartQty(${prod.id}, -1)" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-black text-sm text-slate-700 active:scale-95 transition-all">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <span class="font-black text-xs text-slate-900 px-1">${inCartQty} in tray</span>
+                                        <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" class="w-7 h-7 rounded-lg bg-orange-500 text-white flex items-center justify-center font-black text-sm active:scale-95 transition-all shadow-md">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                ` : `
+                                    <button onclick="addToCart(${prod.id}, '${prod.name.replace(/'/g, "\\'")}', ${prod.price})" 
+                                        class="kiosk-btn-active w-full ${isDisabled ? 'bg-slate-700/80 text-slate-400 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-500/30'} font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all"
+                                        ${isDisabled ? 'disabled' : ''}>
+                                        <i class="bi ${isDisabled ? 'bi-slash-circle-fill' : 'bi-plus-circle-fill text-sm'}"></i>
+                                        <span>${buttonLabel}</span>
+                                    </button>
+                                `}
                         </div>
                     </div>
                 `;
@@ -487,10 +534,7 @@
                 });
             }
             updateCartUI();
-            if (activeCategoryId) {
-                const currentCat = categoriesData.find(c => c.id === activeCategoryId);
-                filterCategory(activeCategoryId, currentCat ? currentCat.name : 'Products');
-            }
+            renderCurrentView();
         }
 
         function updateCartQty(id, delta) {
@@ -510,10 +554,7 @@
                 }
             }
             updateCartUI();
-            if (activeCategoryId) {
-                const currentCat = categoriesData.find(c => c.id === activeCategoryId);
-                filterCategory(activeCategoryId, currentCat ? currentCat.name : 'Products');
-            }
+            renderCurrentView();
         }
 
         function updateCartUI() {

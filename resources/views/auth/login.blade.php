@@ -416,8 +416,13 @@
                         <div class="footer-divider">
                             <span>Don't have an account? <a href="{{ route('register') }}" class="link-action">Create
                                     one</a></span>
+                            <br><br>
+                            <span>------------------------- or -------------------------</span>
+                            <br><br>
+                            <span>Open this as <a href="{{ route('costumer') }}" class="link-action">KIOSK</a></span>
                         </div>
                     @endif
+                    <br>
                 </form>
 
             </div>

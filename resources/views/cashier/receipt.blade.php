@@ -321,8 +321,8 @@
         <!-- Purchased Items Section -->
         <div class="receipt-section-title">Purchased Items</div>
         <ul class="receipt-items">
-            @if (isset($purchasedItems) && count($purchasedItems) > 0)
-                @foreach ($purchasedItems as $item)
+            @if (isset($items) && count($items) > 0)
+                @foreach ($items as $item)
                     <li class="receipt-item">
                         <div class="item-details">
                             <span class="item-name">{{ $item['name'] }}</span>
