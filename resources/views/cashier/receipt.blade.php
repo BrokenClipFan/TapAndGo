@@ -306,7 +306,7 @@
             </div>
             <div class="receipt-meta-row">
                 <span>Pass Code:</span>
-                <strong>{{ $order->order_code ?? ($order->code ?? '558D-E49A') }}</strong>
+                <strong>{{ $order->order_code ?? ($order->code ?? 'TAP-AND-GO') }}</strong>
             </div>
             <div class="receipt-meta-row">
                 <span>Date & Time:</span>
@@ -336,17 +336,10 @@
                 <!-- Fallback Preview Data -->
                 <li class="receipt-item">
                     <div class="item-details">
-                        <span class="item-name">Burger Special</span>
-                        <span class="item-subtext">2 x ₱120.00</span>
+                        <span class="item-name">None</span>
+                        <span class="item-subtext">0 x ₱0.00</span>
                     </div>
-                    <span class="item-price">₱240.00</span>
-                </li>
-                <li class="receipt-item">
-                    <div class="item-details">
-                        <span class="item-name">Iced Coffee</span>
-                        <span class="item-subtext">1 x ₱85.00</span>
-                    </div>
-                    <span class="item-price">₱85.00</span>
+                    <span class="item-price">₱0.00</span>
                 </li>
             @endif
         </ul>
@@ -355,7 +348,7 @@
         <div class="receipt-totals">
             <div class="total-row">
                 <span>Subtotal</span>
-                <span>₱{{ number_format($totalDue ?? 325.0, 2) }}</span>
+                <span>₱{{ number_format($totalDue ?? 0.0, 2) }}</span>
             </div>
             <div class="total-row">
                 <span>Tax (0%)</span>
@@ -363,14 +356,14 @@
             </div>
             <div class="total-row grand-total">
                 <span>TOTAL PAID</span>
-                <span>₱{{ number_format($totalDue ?? 325.0, 2) }}</span>
+                <span>₱{{ number_format($totalDue ?? 0.0, 2) }}</span>
             </div>
         </div>
 
         <!-- Footer / Barcode -->
         <div class="receipt-footer">
             <p>Thank you for using Tap&Go!<br>Please present this receipt at the pickup counter.</p>
-            <div class="barcode">*{{ $order->order_code ?? ($order->code ?? '558D-E49A') }}*</div>
+            <div class="barcode">*{{ $order->order_code ?? ($order->code ?? 'TAP-AND-GO') }}*</div>
         </div>
 
     </div>

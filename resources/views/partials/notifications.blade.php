@@ -1,6 +1,6 @@
 @php
     $alertTypes = [
-        'success' => ['class' => 'bg-success text-white', 'auto_hide' => 'true', 'delay' => 3000, 'title' => 'Success'],
+        'success' => ['class' => 'bg-success text-white', 'auto_hide' => 'true', 'delay' => 7000, 'title' => 'Success'],
         'error' => ['class' => 'bg-danger text-white', 'auto_hide' => 'false', 'delay' => 0, 'title' => 'Error'],
         'warning' => ['class' => 'bg-warning text-dark', 'auto_hide' => 'false', 'delay' => 0, 'title' => 'Warning'],
         'info' => ['class' => 'bg-info text-dark', 'auto_hide' => 'false', 'delay' => 0, 'title' => 'Notice'],

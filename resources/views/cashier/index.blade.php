@@ -10,6 +10,8 @@
 
     <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -313,27 +315,7 @@
             background-color: #cbd5e1;
         }
 
-        .d-none {
-            display: none !important;
-        }
-
         /* Notifications & Modals */
-        .custom-banner {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-            display: none;
-            animation: slideIn 0.3s forwards;
-            background-color: #dcfce7;
-            border: 2px solid #bbf7d0;
-            color: #14532d;
-            padding: 1rem 1.25rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            max-width: 90vw;
-        }
-
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -426,16 +408,6 @@
             background: var(--theme-accent);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -468,10 +440,6 @@
                 display: none;
             }
         }
-
-        .idInput {
-            display: none;
-        }
     </style>
 </head>
 
@@ -480,6 +448,7 @@
         'title' => 'Tap&Go',
         'subtitle' => 'Payment Terminal',
     ])
+
     <header class="pos-header">
         <a class="pos-brand" href="#">
             <img src="{{ asset('Logo.png') }}" alt="Tap&Go Logo" class="pos-brand-logo">
@@ -490,10 +459,13 @@
                 style="background: rgba(255,255,255,0.15); color: #ffffff; padding: 0.4rem 0.8rem; border-radius: 0.6rem; font-weight: 800; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.2);">
                 <i class="bi bi-shop text-orange-400"></i> Station #03
             </span>
-            <div
-                style="color: white; font-weight: 800; font-size: 0.85rem; background: var(--theme-accent); padding: 0.4rem 0.8rem; border-radius: 0.6rem;">
-                Cashier Active
-            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    style="color: white; font-weight: 800; font-size: 0.85rem; background: var(--theme-accent); padding: 0.4rem 0.8rem; border-radius: 0.6rem; border: none;">
+                    Logout
+                </button>
+            </form>
         </div>
     </header>
 
@@ -506,10 +478,6 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; font-weight: 500;">Enter or scan
                         customer receipt pass code</p>
                 </div>
-                <span
-                    style="background-color: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; padding: 0.4rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 0.35rem;">
-                    <i class="bi bi-wifi text-emerald-500"></i> Terminal Ready
-                </span>
             </div>
 
             <div class="terminal-body">
@@ -546,17 +514,17 @@
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px dashed var(--border-color); flex-wrap: wrap; gap: 0.5rem;">
                         <div>
                             <span
-                                style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; tracking-wider;">Order
+                                style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">Order
                                 Ticket</span>
                             <h4 style="font-weight: 900; color: var(--theme-primary); margin: 0; font-size: 1.5rem;"
-                                id="display-order-id">#6</h4>
+                                id="display-order-id">#0</h4>
                         </div>
                         <div style="text-align: right;">
                             <span
                                 style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">Pass
                                 Code</span>
                             <div style="font-weight: 900; color: var(--theme-accent); font-size: 1.2rem; font-family: monospace;"
-                                id="display-pass-code">558D-E49A</div>
+                                id="display-pass-code">N/A</div>
                         </div>
                     </div>
 
@@ -564,9 +532,7 @@
                     <h6
                         style="font-weight: 800; color: var(--text-dark); margin-bottom: 0.6rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
                         Scanned Order Items</h6>
-                    <div class="items-grid" id="kiosk-items-grid">
-                        <!-- Populated dynamically via JS -->
-                    </div>
+                    <div class="items-grid" id="kiosk-items-grid"></div>
 
                     <!-- Total Due -->
                     <div
@@ -578,10 +544,10 @@
 
                     <!-- Actions -->
                     <div class="action-buttons-group">
-                        <form action="{{ route('cashier.order.cancel') }}" method="POST">
+                        <form action="{{ route('cashier.order.cancel') }}" method="POST" id="cancel-form">
                             @csrf
                             @method('DELETE')
-                            <input type="number" name="id" class="idInput">
+                            <input type="hidden" name="id" class="order-id-input">
                             <button type="submit" class="btn-custom btn-custom-danger">
                                 <i class="bi bi-trash3-fill"></i> Cancel Order
                             </button>
@@ -589,7 +555,7 @@
                         <form action="{{ route('cashier.order.pay') }}" method="POST" id="payment-form">
                             @csrf
                             @method('PUT')
-                            <input type="number" name="id" class="idInput">
+                            <input type="hidden" name="id" class="order-id-input">
                             <button type="button" onclick="openConfirmationModal()"
                                 class="btn-custom btn-custom-success">
                                 <i class="bi bi-cash-stack"></i> Accept Payment
@@ -615,29 +581,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Included Items -->
                 <div>
                     <h6
                         style="font-weight: 800; color: var(--theme-success); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem; letter-spacing: 0.5px;">
                         <i class="bi bi-check-circle-fill"></i> Items to be Purchased
                     </h6>
-                    <ul class="summary-list" id="modal-purchased-items">
-                        <!-- Populated by JS -->
-                    </ul>
+                    <ul class="summary-list" id="modal-purchased-items"></ul>
                 </div>
 
-                <!-- Left Behind / Excluded Items -->
                 <div id="modal-excluded-section" class="d-none">
                     <h6
                         style="font-weight: 800; color: var(--theme-danger); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem; letter-spacing: 0.5px;">
                         <i class="bi bi-exclamation-triangle-fill"></i> Items Excluded / Unavailable
                     </h6>
-                    <ul class="summary-list" id="modal-excluded-items">
-                        <!-- Populated by JS -->
-                    </ul>
+                    <ul class="summary-list" id="modal-excluded-items"></ul>
                 </div>
 
-                <!-- Total Summary -->
                 <div
                     style="border-top: 2px solid var(--border-color); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-weight: 800; color: var(--text-dark);">Final Total Due:</span>
@@ -658,27 +617,24 @@
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div class="custom-banner shadow" id="toast-banner">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <i class="bi bi-info-circle-fill" id="toast-icon" style="font-size: 1.25rem;"></i>
-            <div>
-                <strong style="display: block; font-weight: 800; color: var(--text-dark); font-size: 0.9rem;"
-                    id="toast-title">Notification</strong>
-                <span style="font-size: 0.8rem; font-weight: 500;" id="toast-msg">Action processed.</span>
-            </div>
-        </div>
-    </div>
+    @include('partials.notifications')
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Storage asset base path generated by Laravel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap Toast Notifications
+            var toastElements = document.querySelectorAll('.toast');
+            toastElements.forEach(function(toastEl) {
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        });
+
         const storageAssetBase = "{{ asset('storage') }}";
         const fallbackImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80";
-        const idInputs = document.querySelectorAll('.idInput');
 
         let currentActiveOrder = null;
 
-        // Arrays and stock mapping injected from Controller checks
         const outOfStockItems = @json($outOfStockItems ?? []);
         const unavailableItems = @json($unavailableItems ?? []);
         const invalidItems = @json($invalidItems ?? []);
@@ -689,14 +645,6 @@
             loadOrderUI(orderData);
         }
 
-        // Show session errors/success messages on load
-        @if (session('success'))
-            showToast("{{ session('success') }}", "success");
-        @endif
-        @if (session('error'))
-            showToast("{{ session('error') }}", "error");
-        @endif
-
         function loadOrderUI(order) {
             currentActiveOrder = order;
 
@@ -706,8 +654,9 @@
             document.getElementById('display-order-id').innerText = `#${order.id}`;
             document.getElementById('display-pass-code').innerText = order.order_code || order.code || 'N/A';
 
-            idInputs[0].value = order.id;
-            idInputs[1].value = order.id;
+            document.querySelectorAll('.order-id-input').forEach(input => {
+                input.value = order.id;
+            });
 
             renderItems(order.items);
         }
@@ -735,7 +684,6 @@
                     const maxStock = itemStocks[item.id] !== undefined ? parseInt(itemStocks[item.id]) : (item
                         .product ? parseInt(item.product.stock) : 9999);
 
-                    // Determine Badges and Classes
                     let cardOutlineClass = '';
                     let badgeHtml = '';
                     let isButtonDisabled = false;
@@ -829,7 +777,6 @@
             renderItems(currentActiveOrder.items);
         }
 
-        // Modal triggers and rendering logic
         function openConfirmationModal() {
             if (!currentActiveOrder || !currentActiveOrder.items) return;
 
@@ -938,49 +885,7 @@
 
             form.submit();
         }
-
-        function resetTerminal() {
-            currentActiveOrder = null;
-            document.getElementById('empty-state').classList.remove('d-none');
-            document.getElementById('loaded-order-panel').classList.add('d-none');
-            document.getElementById('kiosk-code-input').focus();
-        }
-
-        function showToast(message, type) {
-            const banner = document.getElementById('toast-banner');
-            const toastMsg = document.getElementById('toast-msg');
-            const toastTitle = document.getElementById('toast-title');
-            const toastIcon = document.getElementById('toast-icon');
-
-            toastMsg.innerText = message;
-
-            if (type === "warning") {
-                banner.style.backgroundColor = "#fffbeb";
-                banner.style.borderColor = "#fef3c7";
-                banner.style.color = "#78350f";
-                toastTitle.innerText = "Warning";
-                toastIcon.className = "bi bi-exclamation-triangle-fill";
-            } else if (type === "error") {
-                banner.style.backgroundColor = "#fef2f2";
-                banner.style.borderColor = "#fca5a5";
-                banner.style.color = "#7f1d1d";
-                toastTitle.innerText = "Action Failed";
-                toastIcon.className = "bi bi-x-circle-fill";
-            } else {
-                banner.style.backgroundColor = "#dcfce7";
-                banner.style.borderColor = "#bbf7d0";
-                banner.style.color = "#14532d";
-                toastTitle.innerText = "Success";
-                toastIcon.className = "bi bi-check-circle-fill";
-            }
-
-            banner.style.display = 'block';
-            setTimeout(() => {
-                banner.style.display = 'none';
-            }, 3500);
-        }
     </script>
-
 </body>
 
 </html>
